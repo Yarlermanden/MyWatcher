@@ -5,15 +5,16 @@ using MyWatcher.Entities;
 
 namespace MyWatcher.Services
 {
-    public class DatabaseContext : IDisposable
+    public class DatabaseContext : DbContext
     {
         public DbSet<Item> Items { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
 
-        protected void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
 
             var items = builder.Entity<Item>().ToTable("Item");
             var users = builder.Entity<User>().ToTable("User");
@@ -37,8 +38,9 @@ namespace MyWatcher.Services
 
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
         }
     }
 }
