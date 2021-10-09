@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyWatcher.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211009220158_Initial")]
-    partial class Initial
+    [Migration("20211009232600_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -119,8 +119,12 @@ namespace MyWatcher.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -149,7 +153,9 @@ namespace MyWatcher.Migrations
                 {
                     b.HasOne("MyWatcher.Entities.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MyWatcher.Entities.User", "User")
                         .WithMany()

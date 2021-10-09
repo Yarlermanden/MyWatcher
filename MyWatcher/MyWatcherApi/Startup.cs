@@ -5,20 +5,16 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
-//using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyWatcher.Entities;
 using MyWatcher.Services;
-
-//using Microsoft.Extensions.Hosting;
 
 namespace MyWatcherApi
 {
@@ -45,15 +41,6 @@ namespace MyWatcherApi
             {
                 //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MyWatcherApi"));
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                //options.UseNpgsql(
-                //"Server=localhost;Database=mywatch;Port=5432;User Id=postgres;Password=Pengeko2;Include Error Detail=true; Ssl Mode=Allow");
-                //options.UseNpgsql(
-                //"Server=http://192.168.0.83;Port=5432;Database=mywatch;User Id=postgres;Password=Pengeko2;Include Error Detail=true;");
-                //"postgres@192.168.0.83:5432"
-                //"postgresql://192.168.0.83/mywatch?user=postgres&password=Pengeko2");
-                //"postgres://{postgres}:{Pengeko2}@{192.168.0.83}:{5432}/{mywatch}");
-                //"postgres://postgres:Pengeko2@192.168.0.83:5432/mywatch");
-                
                 //Run migrations with dotnet ef --startup-project ../MyWatcherApi migrations add Initial
             });
             services.AddScoped(p =>
@@ -84,7 +71,6 @@ namespace MyWatcherApi
                 };
             });
 
-
             //services.AddTransient
 
         }
@@ -108,7 +94,7 @@ namespace MyWatcherApi
                     {
                         Name = "Martin Holst",
                         UserName = "Yarl",
-                        Password = "Pengeko2"
+                        Password = "Hej123!"
                     };
 
                     var service = new Service()
