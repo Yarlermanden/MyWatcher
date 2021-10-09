@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using MyWatcher.Entities;
 
 namespace MyWatcher.Services
@@ -12,6 +14,11 @@ namespace MyWatcher.Services
         public DbSet<Service> Services { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
 
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+            Debug.WriteLine($"{ContextId} context created.");
+        }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -38,9 +45,23 @@ namespace MyWatcher.Services
 
         }
 
+        /// <summary>
+        ///     Dispose pattern.
+        /// </summary>
         public override void Dispose()
         {
+            Debug.WriteLine($"{ContextId} context disposed.");
             base.Dispose();
+        }
+        
+        /// <summary>
+        ///     Dispose pattern.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask" /></returns>
+        public override ValueTask DisposeAsync()
+        {
+            Debug.WriteLine($"{ContextId} context disposed async.");
+            return base.DisposeAsync();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MyWatcher.Entities
         public bool Active { get; set; }
         public DateTime LastScan { get; set; }
         
-        [ForeignKey("Service")]
+        //[ForeignKey("Service")]
         public int ServiceId { get; set; }
         public virtual Service Service { get; set; }
     }

@@ -10,11 +10,11 @@ namespace MyWatcher.Entities
         public bool Active { get; set; }
         public DateTime Created { get; set; }
         
-        [ForeignKey("User")]
+        //[ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; }
         
-        [ForeignKey("Item")]
+        //[ForeignKey("Item")]
         public Item Item { get; set; }
     }
 }

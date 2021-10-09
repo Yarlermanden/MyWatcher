@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 //using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -23,25 +24,51 @@ namespace MyWatcherApi
 {
     public class Startup
     {
-        private IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _environment;
+        public IConfiguration Configuration { get; }
         
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _environment = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddAntiforgery(options => { options.Cookie.SecurePolicy = CookieSecurePolicy.Always; });
             AuthenticationConfiguration authenticationConfiguration = new AuthenticationConfiguration();
-
-            services.AddHttpClient();
-            services.AddHttpContextAccessor();
-
+            Configuration.Bind("Authentication", authenticationConfiguration);
+            services.AddSingleton(authenticationConfiguration);
+           
             services.AddDbContextFactory<DatabaseContext>(options =>
+            {
+                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MyWatcherApi"));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseNpgsql(
+                //"Server=localhost;Database=mywatch;Port=5432;User Id=postgres;Password=Pengeko2;Include Error Detail=true; Ssl Mode=Allow");
+                //options.UseNpgsql(
+                //"Server=http://192.168.0.83;Port=5432;Database=mywatch;User Id=postgres;Password=Pengeko2;Include Error Detail=true;");
+                //"postgres@192.168.0.83:5432"
+                //"postgresql://192.168.0.83/mywatch?user=postgres&password=Pengeko2");
+                //"postgres://{postgres}:{Pengeko2}@{192.168.0.83}:{5432}/{mywatch}");
+                //"postgres://postgres:Pengeko2@192.168.0.83:5432/mywatch");
+                
+                //Run migrations with dotnet ef --startup-project ../MyWatcherApi migrations add Initial
+            });
+            services.AddScoped(p =>
+                p.GetRequiredService<IDbContextFactory<DatabaseContext>>()
+                    .CreateDbContext());
+
+            /*
+            services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
+            */
+            
+            services.AddHttpClient();
+            services.AddHttpContextAccessor();
 
             services.AddAuthentication().AddJwtBearer(o =>
             {
@@ -57,12 +84,15 @@ namespace MyWatcherApi
                 };
             });
 
+
             //services.AddTransient
 
         }
 
-        public void Configure(IDbContextFactory<DatabaseContext> dbContextFactory)
+        public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
         {
+            app.UseAuthentication();
+            app.UseAuthorization();
             ApplicationDbInitializer.SeedUsers(dbContextFactory);
         }
 
