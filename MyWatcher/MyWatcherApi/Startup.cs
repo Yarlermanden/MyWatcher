@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyWatcher.Entities;
 using MyWatcher.Services;
+using MyWatcherApi.Api;
 
 namespace MyWatcherApi
 {
@@ -71,14 +72,28 @@ namespace MyWatcherApi
                 };
             });
 
-            //services.AddTransient
+            services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IUserItemService, UserItemService>();
+            services.AddTransient<IUserService, UserService>();
 
         }
 
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
         {
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                /*
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=api}/{action=Index}/{id?}"
+                );
+                */
+                endpoints.MapControllers();
+                //endpoints.
+            });
             ApplicationDbInitializer.SeedUsers(dbContextFactory);
         }
 
