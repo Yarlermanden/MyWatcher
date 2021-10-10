@@ -26,12 +26,17 @@ namespace MyWatcherApi.Api
             return Ok();
         }
 
-        [HttpGet("get/{userId}")]
+        [HttpGet("getpricerunner/{userId}")]
         public async Task<List<UserItemTableDTO>> GetUserItems(int userId)
         {
             return await _userItemService.GetUsersItemsFromService(userId, 1);
         }
-        
-        
+
+        [HttpPost("add")]
+        public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
+        {
+            await _userItemService.AddUserItem(dto);
+            return NoContent();
+        }
     }
 }

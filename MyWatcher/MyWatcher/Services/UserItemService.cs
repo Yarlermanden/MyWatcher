@@ -10,7 +10,7 @@ namespace MyWatcher.Services
 {
     public interface IUserItemService
     {
-        public Task<int> AddUserItem(int userId, string url, int serviceId, string name);
+        public Task<int> AddUserItem(UserItemAddDTO dto);
         public Task<int> AddUserItem(int userId, int itemId, string name);
         public Task<UserItem?> GetUserItem(int userId, int itemId);
         public Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, int serviceId);
@@ -28,20 +28,20 @@ namespace MyWatcher.Services
             _itemService = itemService;
         }
 
-        public async Task<int> AddUserItem(int userId, string url, int serviceId, string name)
+        public async Task<int> AddUserItem(UserItemAddDTO dto)
         {
-            var item = await _itemService.GetItemFromUrlAndServiceId(url, serviceId);
+            var item = await _itemService.GetItemFromUrlAndServiceId(dto.URL, dto.ServiceId);
             if (item == null)
             {
-                var id = await _itemService.AddItem(url, serviceId);
+                var id = await _itemService.AddItem(dto.URL, dto.ServiceId);
                 item = await _itemService.GetItem(id);
             }
 
             //check if this userItem already exists
-            var userItem = await GetUserItem(userId, item.Id);
+            var userItem = await GetUserItem(dto.UserId, item.Id);
             if (userItem != null) return userItem.Id;
 
-            return await AddUserItem(userId, item.Id, name);
+            return await AddUserItem(dto.UserId, item.Id, dto.Name);
         }
 
         public async Task<int> AddUserItem(int userId, int itemId, string name)
