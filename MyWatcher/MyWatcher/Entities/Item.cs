@@ -10,7 +10,7 @@ namespace MyWatcher.Entities
         public double Price { get; set; }
         public string URL { get; set; }
         public bool Active { get; set; }
-        public DateTime LastScan { get; set; }
+        public DateTime? LastScan { get; set; }
         
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
@@ -22,6 +22,7 @@ namespace MyWatcher.Entities
             URL = url;
             ServiceId = serviceId;
             Active = true;
+            Name = "";
         }
     }
 }
