@@ -48,6 +48,14 @@ namespace MyWatcherApi
                 p.GetRequiredService<IDbContextFactory<DatabaseContext>>()
                     .CreateDbContext());
 
+            services.AddCors(policy =>
+            {
+                policy.AddPolicy("CorsPolicy", opt => opt
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
+
             /*
             services.AddDbContext<DatabaseContext>(options =>
             {
@@ -81,6 +89,7 @@ namespace MyWatcherApi
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
         {
             app.UseRouting();
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

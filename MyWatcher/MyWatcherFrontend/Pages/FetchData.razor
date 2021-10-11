@@ -1,0 +1,51 @@
+﻿@page "/pricerunner"
+@using MyWatcher.Models
+@using MyWatcherFrontend.Services
+@using MyWatcher.Entities
+@inject HttpClient Http
+@inject IApiService _apiService
+
+<h1>Pricerunner Items</h1>
+<p>The following table shows all the items you track</p>
+@if (_items == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Last Scanned</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in _items)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.LastScan</td>
+                @*<td>@(() => item.LastScan != null ? item.LastScan : "No scan yet")</td>*@
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<UserItemTableDTO> _items;
+    private User _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = new User() { Id = 1 };
+        _items = await _apiService.GetUserItems(_user);
+    }
+}
