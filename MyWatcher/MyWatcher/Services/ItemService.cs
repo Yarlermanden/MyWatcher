@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyWatcher.Entities;
-using Serilog;
 
 namespace MyWatcher.Services
 {
@@ -33,7 +32,7 @@ namespace MyWatcher.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Failed finding item with id: {id}: {e.Message}");
+                //Log.Error($"Failed finding item with id: {id}: {e.Message}");
                 return null;
             }
         }
