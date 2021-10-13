@@ -72,7 +72,8 @@ namespace MyWatcher.Services
                     Id = ui.Id,
                     Name = ui.Name,
                     Price = ui.Item.Price,
-                    LastScan = ui.Item.LastScan
+                    LastScan = ui.Item.LastScan,
+                    Activate = ui.Active,
                 })
                 .ToListAsync();
         }

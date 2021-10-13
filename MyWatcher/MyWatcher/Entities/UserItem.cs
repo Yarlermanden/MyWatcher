@@ -27,6 +27,7 @@ namespace MyWatcher.Entities
             ItemId = itemId;
             Name = name;
             //Created = DateTime.Now;
+            Active = true;
             Created = DateTime.UtcNow;
         }
     }
