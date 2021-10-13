@@ -51,17 +51,14 @@ namespace MyWatcherApi
             services.AddCors(policy =>
             {
                 policy.AddPolicy("CorsPolicy", opt => opt
-                    .AllowAnyOrigin()
+                    .WithOrigins("https://localhost:5003", "http://localhost:5002")
                     .AllowAnyHeader()
                     .AllowAnyMethod());
-            });
-
-            /*
+                
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
-            */
             
             services.AddHttpClient();
             services.AddHttpContextAccessor();
@@ -89,9 +86,9 @@ namespace MyWatcherApi
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
         {
             app.UseRouting();
-            app.UseCors("CorsPolicy");
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
                 /*
