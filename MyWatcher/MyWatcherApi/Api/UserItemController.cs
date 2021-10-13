@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcher.Models;
 using MyWatcher.Services;
@@ -26,6 +27,7 @@ namespace MyWatcherApi.Api
             return Ok();
         }
 
+        [EnableCors]
         [HttpGet("getpricerunner/{userId}")]
         public async Task<List<UserItemTableDTO>> GetUserItems(int userId)
         {
@@ -33,6 +35,7 @@ namespace MyWatcherApi.Api
         }
 
         [HttpPost("add")]
+        [EnableCors(PolicyName = "CorsPolicy")]
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
             await _userItemService.AddUserItem(dto);

@@ -11,7 +11,8 @@
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
 <UserItemTable @ref=@_userItemTable UserItemTableList=@_items/>
-<MudButton OnClick="@(() => _addUserItemComponent.Visible = true)" Variant="Variant.Filled" Color="Color.Primary">Add item</MudButton>
+@*<MudButton OnClick="@(() => _addUserItemComponent.Visible = true)" Variant="Variant.Filled" Color="Color.Primary">Add item</MudButton>*@
+<MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary">Add Item</MudButton>
 <MudButton @onclick="DeleteUser" Variant="Variant.Filled" Color="Color.Error">Delete Item</MudButton>
 <AddUserItemComponent @ref=@_addUserItemComponent/>
 
@@ -41,6 +42,19 @@
     {
         _addUserItemComponent.Visible = true;
         StateHasChanged();
+    }
+
+    private async Task AddUserItem()
+    {
+        var parameters = new DialogParameters();
+        var dialog = DialogService.Show<AddUserItemComponent>("Add", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var dto = (UserItemAddDTO)result.Data;
+            dto.UserId = _user.Id;
+            await _apiService.AddUserItem(dto);
+        }
     }
     
     private void DeleteUser()

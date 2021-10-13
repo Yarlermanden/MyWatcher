@@ -11,6 +11,7 @@ namespace MyWatcherFrontend.Services
     public interface IApiService
     {
         public Task<List<UserItemTableDTO>> GetUserItems(User user);
+        public Task AddUserItem(UserItemAddDTO dto);
     }
     
     public class ApiService : IApiService
@@ -37,6 +38,13 @@ namespace MyWatcherFrontend.Services
                 return items;
             }
             return null;
+        }
+
+        public async Task AddUserItem(UserItemAddDTO dto)
+        {
+            var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
+            if (response.IsSuccessStatusCode) { Console.WriteLine("Successfully posted Item"); }
+            else { Console.WriteLine("Failed posting Item"); }
         }
     }
 }
