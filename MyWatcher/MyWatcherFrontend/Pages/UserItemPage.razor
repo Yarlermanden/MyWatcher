@@ -60,16 +60,20 @@
         }
     }
     
-    private void DeleteUserItem(UserItemTableDTO userItem)
+    private async Task DeleteUserItem(UserItemTableDTO userItem)
     {
-        Console.WriteLine(userItem.Id);
-        _items.Remove(userItem);
-        StateHasChanged();
         var parameters = new DialogParameters();
         parameters.Add("ContentText", "Are you sure you want to delete this item?\n This process cannot be undone.");
         parameters.Add("ButtonText", "Delete");
         parameters.Add("Color", Color.Error);
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        DialogService.Show<DeleteUserItem>("Delete", parameters, options);
+        var dialog = DialogService.Show<DeleteUserItem>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            Console.WriteLine(userItem.Id);
+            _items.Remove(userItem);
+            StateHasChanged();
+        }
     }
 }
