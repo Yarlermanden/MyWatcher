@@ -54,7 +54,8 @@ namespace MyWatcherApi
                     .WithOrigins("https://localhost:5003", "http://localhost:5002")
                     .AllowAnyHeader()
                     .AllowAnyMethod());
-                
+            });
+
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
@@ -80,7 +81,6 @@ namespace MyWatcherApi
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IUserItemService, UserItemService>();
             services.AddTransient<IUserService, UserService>();
-
         }
 
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
