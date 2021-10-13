@@ -39,6 +39,8 @@ else
         }
         </tbody>
     </table>
+    <h2> Hi </h2>
+    <UserItemTable TableItemList=@_items/>
 }
 
 @code {
@@ -47,7 +49,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _user = new User() { Id = 1 };
-        _items = await _apiService.GetUserItems(_user);
+        _items = new List<UserItemTableDTO>();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _user = new User() { Id = 1 };
+            _items = await _apiService.GetUserItems(_user);
+        }
+        await InvokeAsync(StateHasChanged);
     }
 }
