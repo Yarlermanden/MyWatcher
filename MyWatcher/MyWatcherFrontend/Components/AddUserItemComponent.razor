@@ -1,0 +1,49 @@
+@using MyWatcher.Models
+
+
+<Modal Title="Add Item"
+       Visible="@Visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       OkText="Add">
+@* 
+    <Form>
+        <FormItem Label="">
+            <TextArea Style="min-height: 100px" Placeholder="The url of the item..." @bind-Value="@_itemUrl" @DebounceMilliseconds="5000"></TextArea>
+        </FormItem>
+        <FormItem Label="">
+            <TextArea Style="min-height: 100px" Placeholder="The desired name of your item..." @bind-Value="@_itemName" @DebounceMilliseconds="5000"></TextArea>
+        </FormItem>
+    </Form>
+    *@
+</Modal>
+
+@code {
+    public bool Visible { get; set; }
+    //Add method invoke back to allow UserItemPage in updating its table
+
+    private string _itemUrl;
+    private string _itemName;
+
+    public void HandleOk()
+    {
+        if (string.IsNullOrEmpty(_itemUrl))
+        {
+            //<Alert Message="Need url" />
+        }
+        else if (string.IsNullOrEmpty(_itemName))
+        {
+            //<Alert Message="Need url" />
+        }
+        else
+        {
+            var userItemDto = new UserItemAddDTO(_itemUrl, _itemName, 1);
+            Visible = false;
+        }
+    }
+
+    public void HandleCancel()
+    {
+        Visible = false;
+    }
+}
