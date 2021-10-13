@@ -3,7 +3,7 @@
 
 <div>
     <h3>UserItemTable</h3>
-    <MudTable Items="@UserItemTableList">
+    <MudTable Items="@UserItemTableList" Hover="true" Loading="@_loadingTable" LoadingProgressColor="Color.Info">
         <HeaderContent>
             <MudTh><strong>Id</strong></MudTh>
             <MudTh><strong>Name</strong></MudTh>
@@ -26,6 +26,7 @@
 
 @code {
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
+    private bool _loadingTable=true;
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
@@ -46,6 +47,8 @@
         if (firstRender)
         {
             await OnParametersSetAsync();
+            //_loadingTable = false;
+            StateHasChanged();
         }
     }
 }
