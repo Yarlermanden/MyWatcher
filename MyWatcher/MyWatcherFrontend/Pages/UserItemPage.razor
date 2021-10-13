@@ -22,6 +22,7 @@ else
             <th>Name</th>
             <th>Price</th>
             <th>Last Scanned</th>
+            <th>Active</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@ else
                 <td>@item.Name</td>
                 <td>@item.Price</td>
                 <td>@item.LastScan</td>
+                <td>@item.Activate</td>
                 @*<td>@(() => item.LastScan != null ? item.LastScan : "No scan yet")</td>*@
             </tr>
         }
