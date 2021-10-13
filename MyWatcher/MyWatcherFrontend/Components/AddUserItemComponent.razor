@@ -1,21 +1,6 @@
 @using MyWatcher.Models
 @using MudBlazor
 
-@*
-<Modal Title="Add Item"
-       Visible="@Visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel"
-       OkText="Add">
-    <Form>
-        <FormItem Label="">
-        </FormItem>
-        <FormItem Label="">
-        </FormItem>
-    </Form>
-</Modal>
-*@
-
 <MudDialog>
     <TitleContent>
         <MudText>
@@ -35,8 +20,6 @@
 @code {
     //Todo Add alert to the MudTextFields for when no text is written
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    public bool Visible { get; set; }
-    //Add method invoke back to allow UserItemPage in updating its table
 
     private string _itemUrl;
     private string _itemName;
@@ -54,14 +37,12 @@
         else
         {
             var userItemDto = new UserItemAddDTO(_itemUrl, _itemName, 1);
-            Visible = false;
             MudDialog.Close(DialogResult.Ok(userItemDto));
         }
     }
 
     public void Cancel()
     {
-        Visible = false;
         MudDialog.Cancel();
     }
 }

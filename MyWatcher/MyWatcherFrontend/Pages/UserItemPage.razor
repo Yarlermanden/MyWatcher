@@ -38,12 +38,6 @@
         }
     }
 
-    public async Task ShowAddUserItemComponent()
-    {
-        _addUserItemComponent.Visible = true;
-        StateHasChanged();
-    }
-
     private async Task AddUserItem()
     {
         var parameters = new DialogParameters();
@@ -53,7 +47,18 @@
         {
             var dto = (UserItemAddDTO)result.Data;
             dto.UserId = _user.Id;
-            await _apiService.AddUserItem(dto);
+            var success = await _apiService.AddUserItem(dto);
+            if (success)
+            {
+                //Get the new item from the database
+                var userItemTableDTO = new UserItemTableDTO()
+                {
+                    Name = dto.Name,
+                    Active = true,
+                };
+                _items.Add(userItemTableDTO);
+                StateHasChanged();
+            }
         }
     }
     

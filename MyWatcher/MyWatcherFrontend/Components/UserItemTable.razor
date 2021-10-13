@@ -21,7 +21,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Price">@ShowPriceText(@context.Price)</MudTd>
             <MudTd DataLabel="LastScan">@DateToTime(@context.LastScan)</MudTd>
             <MudTd DataLabel="Active">@context.Active</MudTd>
             <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
@@ -55,6 +55,12 @@
             await OnParametersSetAsync();
             StateHasChanged();
         }
+    }
+
+    private string ShowPriceText(double price)
+    {
+        if (price == 0) return "Unknown";
+        return price.ToString();
     }
 
     private string DateToTime(DateTime? dateTime)
