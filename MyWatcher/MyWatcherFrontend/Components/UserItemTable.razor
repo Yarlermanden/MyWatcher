@@ -3,7 +3,11 @@
 
 <div>
     <h3>UserItemTable</h3>
-    <MudTable Items="@UserItemTableList" Hover="true" Loading="@_loadingTable" LoadingProgressColor="Color.Info">
+    <MudTable Items="@UserItemTableList" Hover="true" Striped="true" Loading="@LoadingTable" LoadingProgressColor="Color.Info" Filter="new Func<UserItemTableDTO,bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudSpacer />
+                    <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh><strong>Id</strong></MudTh>
             <MudTh><strong>Name</strong></MudTh>
@@ -18,15 +22,17 @@
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Price">@context.Price</MudTd>
-            <MudTd DataLabel="LastScan">@context.LastScan</MudTd>
+            <MudTd DataLabel="LastScan">@DateToTime(@context.LastScan)</MudTd>
             <MudTd DataLabel="Active">@context.Active</MudTd>
+            <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
         </RowTemplate>
     </MudTable>
 </div>
 
 @code {
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
-    private bool _loadingTable=true;
+    public bool LoadingTable { get; set; } = true;
+    private string _searchText;
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
@@ -47,8 +53,26 @@
         if (firstRender)
         {
             await OnParametersSetAsync();
-            //_loadingTable = false;
             StateHasChanged();
         }
+    }
+
+    private string DateToTime(DateTime? dateTime)
+    {
+        if (dateTime == null) return "No scan yet";
+        return dateTime.Value.ToString("dddd, dd MMMM yyyy");
+    }
+    
+    private bool FilterFunc1(UserItemTableDTO element) => FilterFunc(element, _searchText);
+    
+    private bool FilterFunc(UserItemTableDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        //if (element.URL.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            //return true;
+        return false;
     }
 }
