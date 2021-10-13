@@ -25,12 +25,14 @@
             <MudTd DataLabel="LastScan">@DateToTime(@context.LastScan)</MudTd>
             <MudTd DataLabel="Active">@context.Active</MudTd>
             <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
+            <MudButton @onclick="@(() => OnDelete.InvokeAsync(@context))"><MudIcon Icon="@Icons.Material.TwoTone.Delete" Color="Color.Error"></MudIcon></MudButton>
         </RowTemplate>
     </MudTable>
 </div>
 
 @code {
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
+    [Parameter] public EventCallback<UserItemTableDTO> OnDelete { get; set; }
     public bool LoadingTable { get; set; } = true;
     private string _searchText;
 
