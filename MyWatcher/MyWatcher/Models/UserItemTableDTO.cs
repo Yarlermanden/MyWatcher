@@ -8,6 +8,6 @@ namespace MyWatcher.Models
         public string Name { get; set; }
         public double Price { get; set; }
         public DateTime? LastScan { get; set; }
-        public bool Activate { get; set; }
+        public bool Active { get; set; }
     }
 }

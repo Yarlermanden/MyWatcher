@@ -73,7 +73,7 @@ namespace MyWatcher.Services
                     Name = ui.Name,
                     Price = ui.Item.Price,
                     LastScan = ui.Item.LastScan,
-                    Activate = ui.Active,
+                    Active = ui.Active,
                 })
                 .ToListAsync();
         }
