@@ -31,7 +31,7 @@ namespace MyWatcherFrontend.Services
             switch (requestType)
             {
                 case Method.GET:
-                    return await _client.GetAsync("https://localhost:5001" + endpoint);
+                    return await _client.GetAsync("http://localhost:5000" + endpoint);
                 case Method.POST:
                 default:
                     return null;
