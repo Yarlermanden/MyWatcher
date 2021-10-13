@@ -9,24 +9,24 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0-rc.1.21452.15" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0-rc.2.21480.10" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.0-rc.1.21452.15" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-rc.1.21452.15" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0-rc.1.21452.15" />
-      <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0-rc.1.21452.15" />
-      <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-rc.1.21452.15" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-rc.1.21452.15" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.0-rc.2.21480.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-rc.2.21480.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0-rc.2.21480.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0-rc.2.21480.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-rc.2.21480.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-rc.2.21480.10" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.Bot.Connector" Version="4.14.1" />
       <PackageReference Include="Microsoft.Bot.Connector.AspNetCore" Version="2.0.1.44133" />
       <PackageReference Include="Microsoft.Bot.Connector.DirectLine" Version="3.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.1.21452.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-rc.1.21452.10">
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.2.21480.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-rc.2.21480.5">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-rc.1.21451.13" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-rc.2.21480.5" />
       <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.13.1" />
       <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.0" />
       <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.Configuration" Version="5.1.335" />

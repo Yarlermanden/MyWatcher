@@ -1,46 +1,51 @@
 @using MyWatcher.Models
 @using MudBlazor
 
-<h3>UserItemTable</h3>
-<MudTable Items="@_tableItemList">
-    <HeaderContent>
-        <MudTh><strong>Id</strong></MudTh>
-        <MudTh><strong>Name</strong></MudTh>
-        <MudTh><strong>Price</strong></MudTh>
-        <MudTh><strong>Last Scanned</strong></MudTh>
-        <MudTh><strong>Active</strong></MudTh>
-    </HeaderContent>
-    <NoRecordsContent>
-        <Empty Simple/>
-    </NoRecordsContent>
-    <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Id">@context.Name</MudTd>
-        <MudTd DataLabel="Id">@context.Price</MudTd>
-        <MudTd DataLabel="Id">@context.LastScan</MudTd>
-        <MudTd DataLabel="Id">@context.Activate</MudTd>
-    </RowTemplate>
-</MudTable>
+<div>
+    <h3>UserItemTable</h3>
+    <MudTable Items="@UserItemTableList">
+        <HeaderContent>
+            <MudTh><strong>Id</strong></MudTh>
+            <MudTh><strong>Name</strong></MudTh>
+            <MudTh><strong>Price</strong></MudTh>
+            <MudTh><strong>Last Scanned</strong></MudTh>
+            <MudTh><strong>Active</strong></MudTh>
+        </HeaderContent>
+        <NoRecordsContent>
+            <Empty Simple/>
+        </NoRecordsContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="LastScan">@context.LastScan</MudTd>
+            <MudTd DataLabel="Active">@context.Active</MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>
 
 @code {
-    //private MudTable<UserItemTableDTO> _table;
+    [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
 
-    private List<UserItemTableDTO> _tableItemList;
-    [Parameter] public List<UserItemTableDTO> UserItemList { get; set; }
-
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<List<UserItemTableDTO>>(nameof(UserItemTableList), out var value))
+        {
+            if (value is null) { Console.WriteLine("The value of 'UserItemList' is null."); }
+            else { Console.WriteLine($"The value of 'UserItem' is set with count {value.Count}"); }
+        }
+        await base.SetParametersAsync(parameters);
+    }
+    
     protected override async Task OnInitializedAsync()
     {
-        _tableItemList = new List<UserItemTableDTO>();
-    //_table = new MudTable<UserItemTableDTO>();
-
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            //_table.Items = TableItemList.Select(i => i);
-            _tableItemList = UserItemList;
+            await OnParametersSetAsync();
         }
     }
 }

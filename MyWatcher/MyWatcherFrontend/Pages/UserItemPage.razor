@@ -2,6 +2,7 @@
 @using MyWatcher.Models
 @using MyWatcherFrontend.Services
 @using MyWatcher.Entities
+@using MyWatcherFrontend.Components
 @inject HttpClient Http
 @inject IApiService _apiService
 
@@ -15,50 +16,24 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Last Scanned</th>
-            <th>Active</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in _items)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Price</td>
-                <td>@item.LastScan</td>
-                <td>@item.Activate</td>
-                @*<td>@(() => item.LastScan != null ? item.LastScan : "No scan yet")</td>*@
-            </tr>
-        }
-        </tbody>
-    </table>
-    <h2> Hi </h2>
-    <UserItemTable TableItemList=@_items/>
+    <UserItemTable @ref=@_userItemTable UserItemTableList=@_items/>
 }
 
 @code {
-    private List<UserItemTableDTO> _items;
-    private User _user;
+    private List<UserItemTableDTO> _items = new List<UserItemTableDTO>();
+    private UserItemTable _userItemTable;
+    private User _user = new User() {Id = 1};
 
     protected override async Task OnInitializedAsync()
     {
-        _items = new List<UserItemTableDTO>();
+        _userItemTable = new UserItemTable();
+        _items = await _apiService.GetUserItems(_user);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _user = new User() { Id = 1 };
-            _items = await _apiService.GetUserItems(_user);
         }
-        await InvokeAsync(StateHasChanged);
     }
 }
