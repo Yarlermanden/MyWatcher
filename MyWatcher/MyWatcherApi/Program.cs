@@ -21,8 +21,7 @@ namespace MyWatcherApi
             var host = CreateHostBuilder(args).Build();
             
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
-            //var isDevelopment = environment == Environments.Development;
-            var isDevelopment = true;
+            var isDevelopment = environment == Environments.Development;
             
             if (isDevelopment)
             {
@@ -95,7 +94,7 @@ namespace MyWatcherApi
                     var environment = hostingContext.HostingEnvironment.EnvironmentName;
                     config.SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    //.AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true)
                     .AddEnvironmentVariables();
                 })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
