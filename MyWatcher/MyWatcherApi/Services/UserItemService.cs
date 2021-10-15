@@ -14,6 +14,7 @@ namespace MyWatcher.Services
         public Task<int> AddUserItem(int userId, int itemId, string name);
         public Task<UserItem?> GetUserItem(int userId, int itemId);
         public Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, int serviceId);
+        public Task<bool> DeleteUserItem(UserItemDeleteDTO dto);
     }
     
     public class UserItemService : IUserItemService
@@ -76,6 +77,19 @@ namespace MyWatcher.Services
                     Active = ui.Active,
                 })
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteUserItem(UserItemDeleteDTO dto)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var userItem = await dbContext.UserItems.FindAsync(dto.Id);
+            if (userItem != null && userItem.UserId == dto.UserId)
+            {
+                dbContext.UserItems.Remove(userItem);
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

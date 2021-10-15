@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -13,6 +14,7 @@ namespace MyWatcherFrontend.Services
     {
         public Task<HttpResponseMessage> SendGetRequest(string endpoint, object item);
         public Task<HttpResponseMessage> PostItemRequest(string endpoint, object item);
+        public Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item);
     }
     
     public class CommunicationService : ICommunicationService
@@ -35,10 +37,21 @@ namespace MyWatcherFrontend.Services
                     return await _client.GetAsync(baseUrl + endpoint);
                 case Method.POST:
                     string jsonString = _jsonSerializer.Serialize(item);
-                    Console.WriteLine(jsonString);
                     var content = new StringContent(jsonString.ToString(), Encoding.UTF8, "application/json");
-                    //var content = new StringContent(jsonString.ToString(), Encoding.UTF8, "application/text");
                     return await _client.PostAsync(baseUrl + endpoint, content);
+                case Method.DELETE:
+                    /*
+                    jsonString = _jsonSerializer.Serialize(item);
+                    content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                    return await _client.DeleteAsync(baseUrl + endpoint, content);
+                    */
+                    var request = new HttpRequestMessage
+                    {
+                        Content = new StringContent(_jsonSerializer.Serialize(item), Encoding.UTF8, "application/json"),
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri(baseUrl + endpoint)
+                    };
+                    return await _client.SendAsync(request);
                 default:
                     return null;
             }
@@ -53,6 +66,12 @@ namespace MyWatcherFrontend.Services
         public async Task<HttpResponseMessage> PostItemRequest(string endpoint, object item)
         {
             var response = await SendRequestToApi(endpoint, item, Method.POST);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item)
+        {
+            var response = await SendRequestToApi(endpoint, item, Method.DELETE);
             return response;
         }
     }
