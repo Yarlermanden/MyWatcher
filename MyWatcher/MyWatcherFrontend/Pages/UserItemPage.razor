@@ -11,7 +11,7 @@
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
 <UserItemTable @ref=@_userItemTable UserItemTableList=@_items OnDelete="@((userItem) => DeleteUserItem(userItem))"/>
-<MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary">Add Item</MudButton>
+<MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Add Items</MudButton>
 <AddUserItemComponent @ref=@_addUserItemComponent/>
 
 @code {
