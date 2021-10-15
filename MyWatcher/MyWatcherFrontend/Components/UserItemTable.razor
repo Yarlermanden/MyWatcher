@@ -9,24 +9,34 @@
                     <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><strong>Id</strong></MudTh>
-            <MudTh><strong>Name</strong></MudTh>
-            <MudTh><strong>Price</strong></MudTh>
-            <MudTh><strong>Last Scanned</strong></MudTh>
-            <MudTh><strong>Active</strong></MudTh>
+            <MudTh Style="width: 5%; height:10px"><strong>Id</strong></MudTh>
+            <MudTh Style="width: 40%"><strong>Name</strong></MudTh>
+            <MudTh Style="width: 15%"><strong>Price</strong></MudTh>
+            <MudTh Style="width: 25%"><strong>Last Scanned</strong></MudTh>
+            <MudTh Style="width: 5%"><strong>Active</strong></MudTh>
+            <MudTh Style="width: 5%"><strong></strong></MudTh>
+            <MudTh Style="width: 5%; height:10px"><strong></strong></MudTh>
         </HeaderContent>
         <NoRecordsContent>
             <Empty Simple/>
         </NoRecordsContent>
         <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Price">@ShowPriceText(@context.Price)</MudTd>
-            <MudTd DataLabel="LastScan">@DateToTime(@context.LastScan)</MudTd>
-            <MudTd DataLabel="Active">@context.Active</MudTd>
-            <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
-            <MudButton @onclick="@(() => OnDelete.InvokeAsync(@context))"><MudIcon Icon="@Icons.Material.TwoTone.Delete" Color="Color.Error"></MudIcon></MudButton>
+            <MudTd DataLabel="Id" Style="height:10px">@context.Id</MudTd>
+            <MudTd DataLabel="Name" Style="height:10px">@context.Name</MudTd>
+            <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price)</MudTd>
+            <MudTd DataLabel="LastScan" Style="height:10px">@DateToTime(@context.LastScan)</MudTd>
+            <MudTd DataLabel="Active" Style="height:10px">@context.Active</MudTd>
+            <MudTd>
+                <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
+            </MudTd>
+            <MudTd>
+                <MudButton @onclick="@(() => OnDelete.InvokeAsync(@context))"><MudIcon Icon="@Icons.Material.TwoTone.Delete" Color="Color.Error"></MudIcon></MudButton>
+            </MudTd>
         </RowTemplate>
+        <PagerContent>
+            @*<MudTablePager InfoFormat="@($"Center {first_item}-{last_item} of {all_items})" HorizontalAlignment="HorizontalAlignment.Center" />*@
+            <MudTablePager PageSizeOptions="new int[]{10, 25, 50, 100}" />
+        </PagerContent>
     </MudTable>
 </div>
 
