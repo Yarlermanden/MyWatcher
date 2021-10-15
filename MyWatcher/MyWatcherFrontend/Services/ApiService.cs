@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MyWatcher.Models;
 using System.Text.Json;
 using MyWatcher.Entities;
+using Npgsql.Replication;
 
 namespace MyWatcherFrontend.Services
 {
@@ -12,6 +13,7 @@ namespace MyWatcherFrontend.Services
     {
         public Task<List<UserItemTableDTO>> GetUserItems(User user);
         public Task<bool> AddUserItem(UserItemAddDTO dto);
+        public Task<bool> DeleteUserItem(UserItemDeleteDTO dto);
     }
     
     public class ApiService : IApiService
@@ -44,6 +46,14 @@ namespace MyWatcherFrontend.Services
         {
             var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
             if (response.IsSuccessStatusCode) { Console.WriteLine("Successfully posted Item"); }
+            else { Console.WriteLine("Failed posting Item"); }
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteUserItem(UserItemDeleteDTO dto)
+        {
+            var response = await _communicationService.DeleteItemRequest($"/api/useritem/delete", dto);
+            if(response.IsSuccessStatusCode) {Console.WriteLine("Succesfully deleted item"); }
             else { Console.WriteLine("Failed posting Item"); }
             return response.IsSuccessStatusCode;
         }

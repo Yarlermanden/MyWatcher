@@ -9,17 +9,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MyWatcher.Migrations
+namespace MyWatcherApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211009232600_initial")]
+    [Migration("20211014200710_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0-rc.1.21452.10")
+                .HasAnnotation("ProductVersion", "6.0.0-rc.2.21480.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -36,7 +36,7 @@ namespace MyWatcher.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastScan")
+                    b.Property<DateTime?>("LastScan")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")

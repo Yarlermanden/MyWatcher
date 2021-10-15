@@ -35,10 +35,18 @@ namespace MyWatcherApi.Api
         }
 
         [HttpPost("add")]
-        [EnableCors(PolicyName = "CorsPolicy")]
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
-            await _userItemService.AddUserItem(dto);
+            var id = await _userItemService.AddUserItem(dto);
+            //Todo return id - update frontend item with this id
+            return NoContent();
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUserItem([FromBody] UserItemDeleteDTO dto)
+        {
+            var success = await _userItemService.DeleteUserItem(dto);
+            //Todo return based on success - tell use if they tried to delete invalid item
             return NoContent();
         }
     }

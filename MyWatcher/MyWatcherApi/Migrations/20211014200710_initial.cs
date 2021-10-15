@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MyWatcher.Migrations
+namespace MyWatcherApi.Migrations
 {
     public partial class initial : Migration
     {
@@ -48,7 +48,7 @@ namespace MyWatcher.Migrations
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     URL = table.Column<string>(type: "text", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false),
-                    LastScan = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastScan = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ServiceId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

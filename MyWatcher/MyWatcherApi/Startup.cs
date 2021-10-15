@@ -108,10 +108,10 @@ namespace MyWatcherApi
             public static void SeedUsers(IDbContextFactory<DatabaseContext> factory)
             {
                 using var dbContext = factory.CreateDbContext();
-                var user = dbContext.Users.SingleOrDefault(u => u.UserName == "Yarl");
-                if (user == null)
+                var users = dbContext.Users.Select(u => u).ToList();
+                if (users == null || users.Count == 0)
                 {
-                    user = new User()
+                    var user = new User()
                     {
                         Name = "Martin Holst",
                         UserName = "Yarl",

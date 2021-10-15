@@ -1,7 +1,9 @@
 @using MudBlazor
 <MudDialog>
     <DialogContent>
-        <MudText>@ContentText</MudText>
+        @*<MudText>@ContentText</MudText>*@
+        <MudText>Are you sure you want to delete this item?</MudText>
+        <MudText>This process cannot be undone</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="@Cancel">Cancel</MudButton>
