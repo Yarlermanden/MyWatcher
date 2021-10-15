@@ -98,7 +98,6 @@ namespace MyWatcherApi
                 );
                 */
                 endpoints.MapControllers();
-                //endpoints.
             });
             ApplicationDbInitializer.SeedUsers(dbContextFactory);
         }

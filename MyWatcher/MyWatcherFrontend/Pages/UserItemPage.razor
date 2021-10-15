@@ -45,7 +45,7 @@
         {
             var dto = (UserItemAddDTO)result.Data;
             dto.UserId = _user.Id;
-            var success = await _apiService.AddUserItem(dto);
+            var (success, id) = await _apiService.AddUserItem(dto);
             if (success)
             {
                 //Get the new item from the database
@@ -53,6 +53,7 @@
                 {
                     Name = dto.Name,
                     Active = true,
+                    Id = id
                 };
                 _items.Add(userItemTableDTO);
                 StateHasChanged();

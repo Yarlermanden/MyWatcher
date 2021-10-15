@@ -12,7 +12,7 @@ namespace MyWatcherFrontend.Services
     public interface IApiService
     {
         public Task<List<UserItemTableDTO>> GetUserItems(User user);
-        public Task<bool> AddUserItem(UserItemAddDTO dto);
+        public Task<(bool, int)> AddUserItem(UserItemAddDTO dto);
         public Task<bool> DeleteUserItem(UserItemDeleteDTO dto);
     }
     
@@ -42,12 +42,21 @@ namespace MyWatcherFrontend.Services
             return null;
         }
 
-        public async Task<bool> AddUserItem(UserItemAddDTO dto)
+        public async Task<(bool, int)> AddUserItem(UserItemAddDTO dto)
         {
             var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
-            if (response.IsSuccessStatusCode) { Console.WriteLine("Successfully posted Item"); }
-            else { Console.WriteLine("Failed posting Item"); }
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                var id = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Successfully posted Item with id: {id}"); 
+                
+                return (response.IsSuccessStatusCode, int.Parse(id));
+            }
+            else
+            {
+                Console.WriteLine("Failed posting Item");
+                return (response.IsSuccessStatusCode, -1);
+            }
         }
 
         public async Task<bool> DeleteUserItem(UserItemDeleteDTO dto)
