@@ -38,8 +38,9 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
             var id = await _userItemService.AddUserItem(dto);
+            return new OkObjectResult(id);
             //Todo return id - update frontend item with this id
-            return NoContent();
+            //return NoContent();
         }
 
         [HttpDelete("delete")]
