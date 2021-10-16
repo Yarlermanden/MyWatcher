@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,9 @@ namespace MyWatcher.Services
         public Task<Item?> GetItem(int id);
         public Task<Item?> GetItemFromUrlAndServiceId(string url, int serviceId);
         public Task<int> AddItem(string url, int serviceId);
+        public Task UpdateItem(ItemUpdateDTO dto);
+        public Task<List<ItemGetDTO>> GetAllItemsOfService(int serviceId);
+        public Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUser(int serviceId, int userId);
     }
     
     public class ItemService : IItemService
@@ -71,6 +75,26 @@ namespace MyWatcher.Services
                 item.LastWeeklyPriceUpdate = item.LastScan;
             }
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ItemGetDTO>> GetAllItemsOfService(int serviceId)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var items = await dbContext.Items
+                .Where(i => i.ServiceId == serviceId)
+                .Select(i => new ItemGetDTO(i))
+                .ToListAsync();
+            return items;
+        }
+
+        public async Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUser(int serviceId, int userId)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var items = await dbContext.UserItems.Include(ui => ui.Item)
+                .Where(ui => ui.UserId == userId && ui.Item.ServiceId == serviceId)
+                .Select(ui => new ItemGetDTO(ui.Item))
+                .ToListAsync();
+            return items;
         }
     }
 }
