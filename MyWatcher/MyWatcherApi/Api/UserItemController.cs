@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcher.Models;
 using MyWatcher.Services;
+using Serilog;
 
 namespace MyWatcherApi.Api
 {
@@ -38,6 +39,7 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
             var id = await _userItemService.AddUserItem(dto);
+            Log.Information($"Added UserItem with Id {id}");
             return new OkObjectResult(id);
             //Todo return id - update frontend item with this id
             //return NoContent();

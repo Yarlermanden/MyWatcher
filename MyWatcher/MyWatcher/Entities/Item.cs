@@ -27,7 +27,7 @@ namespace MyWatcher.Entities
             ServiceId = serviceId;
             Active = true;
             Name = "";
-            LastWeeklyPriceUpdate = DateTime.Now;
+            LastWeeklyPriceUpdate = DateTime.UtcNow;
         }
         
         public double PricePercentageCalculator(double price, double priceLastWeek)
