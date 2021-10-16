@@ -10,7 +10,7 @@
 
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
-<UserItemTable @ref=@_userItemTable UserItemTableList=@_items OnDelete="@((userItem) => DeleteUserItem(userItem))"/>
+<UserItemTable @ref=@_userItemTable UserItemTableList=@_items OnDelete="@((userItem) => DeleteUserItem(userItem))" OnUpdate="@UpdateUserItem"/>
 <MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Add Items</MudButton>
 <AddUserItemComponent @ref=@_addUserItemComponent/>
 
@@ -93,5 +93,16 @@
                 //Todo show error alert
             }
         }
+    }
+
+    private async Task UpdateUserItem(UserItemTableDTO userItem)
+    {
+        var dto = new UserItemUpdateDTO()
+        {
+            Id = userItem.Id,
+            Active = userItem.Active,
+            UserId = _user.Id,
+        };
+        await _apiService.UpdateUserItem(dto);
     }
 }

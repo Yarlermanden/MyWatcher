@@ -10,11 +10,10 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh Style="width: 5%; height:10px"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Id)"><strong>Id</strong></MudTableSortLabel></MudTh>
-            <MudTh Style="width: 40%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Name)"><strong>Name</strong></MudTableSortLabel></MudTh>
+            <MudTh Style="width: 35%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Name)"><strong>Name</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 15%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Price)"><strong>Price</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 25%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.LastScan)"><strong>Last Scanned</strong></MudTableSortLabel></MudTh>
-            <MudTh Style="width: 5%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Active)"><strong>Active</strong></MudTableSortLabel></MudTh>
-            <MudTh Style="width: 5%"><strong></strong></MudTh>
+            <MudTh Style="width: 15%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Active)"><strong>Active</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 5%; height:10px"><strong></strong></MudTh>
         </HeaderContent>
         <NoRecordsContent>
@@ -25,9 +24,9 @@
             <MudTd DataLabel="Name" Style="height:10px">@context.Name</MudTd>
             <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price)</MudTd>
             <MudTd DataLabel="LastScan" Style="height:10px">@DateToTime(@context.LastScan)</MudTd>
-            <MudTd DataLabel="Active" Style="height:10px">@context.Active</MudTd>
             <MudTd>
-                <MudSwitch @bind-Checked="@context.Active" Color="Color.Primary"></MudSwitch>
+                @*<MudSwitch @bind-Checked="@context.Active" Label="@(context.Active ? "Active " : "Inactive")" Color="Color.Primary"></MudSwitch>*@
+                <MudSwitch Checked="@context.Active" CheckedChanged="((bool value) => UserItemActive(context))" Label="@(context.Active ? "Active " : "Inactive")" Color="Color.Primary"></MudSwitch>
             </MudTd>
             <MudTd>
                 <MudButton @onclick="@(() => OnDelete.InvokeAsync(@context))"><MudIcon Icon="@Icons.Material.TwoTone.Delete" Color="Color.Error"></MudIcon></MudButton>
@@ -43,16 +42,19 @@
 @code {
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
     [Parameter] public EventCallback<UserItemTableDTO> OnDelete { get; set; }
+    [Parameter] public EventCallback<UserItemTableDTO> OnUpdate { get; set; }
     public bool LoadingTable { get; set; } = true;
     private string _searchText;
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
+        /*
         if (parameters.TryGetValue<List<UserItemTableDTO>>(nameof(UserItemTableList), out var value))
         {
             if (value is null) { Console.WriteLine("The value of 'UserItemList' is null."); }
             else { Console.WriteLine($"The value of 'UserItem' is set with count {value.Count}"); }
         }
+        */
         await base.SetParametersAsync(parameters);
     }
     
@@ -92,5 +94,10 @@
             //return true;
         return false;
     }
-    
+
+    private async Task UserItemActive(UserItemTableDTO dto)
+    {
+        dto.Active = !dto.Active;
+        await OnUpdate.InvokeAsync(dto);
+    }
 }
