@@ -15,6 +15,7 @@ namespace MyWatcherFrontend.Services
         public Task<HttpResponseMessage> SendGetRequest(string endpoint, object item);
         public Task<HttpResponseMessage> PostItemRequest(string endpoint, object item);
         public Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item);
+        public Task<HttpResponseMessage> UpdateItemRequest(string endpoint, object item);
     }
     
     public class CommunicationService : ICommunicationService
@@ -41,10 +42,6 @@ namespace MyWatcherFrontend.Services
                     return await _client.PostAsync(baseUrl + endpoint, content);
                 case Method.DELETE:
                     /*
-                    jsonString = _jsonSerializer.Serialize(item);
-                    content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-                    return await _client.DeleteAsync(baseUrl + endpoint, content);
-                    */
                     var request = new HttpRequestMessage
                     {
                         Content = new StringContent(_jsonSerializer.Serialize(item), Encoding.UTF8, "application/json"),
@@ -52,9 +49,24 @@ namespace MyWatcherFrontend.Services
                         RequestUri = new Uri(baseUrl + endpoint)
                     };
                     return await _client.SendAsync(request);
+                    */
+                    return await sendMessage(baseUrl + endpoint, item, HttpMethod.Delete);
+                case Method.PATCH:
+                    return await sendMessage(baseUrl + endpoint, item, HttpMethod.Patch);
                 default:
                     return null;
             }
+        }
+
+        private async Task<HttpResponseMessage> sendMessage(string endpoint, object item, HttpMethod method)
+        {
+            var request = new HttpRequestMessage
+            {
+                Content = new StringContent(_jsonSerializer.Serialize(item), Encoding.UTF8, "application/json"),
+                Method = method,
+                RequestUri = new Uri(endpoint)
+            };
+            return await _client.SendAsync(request);
         }
 
         public async Task<HttpResponseMessage> SendGetRequest(string endpoint, object item)
@@ -72,6 +84,12 @@ namespace MyWatcherFrontend.Services
         public async Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item)
         {
             var response = await SendRequestToApi(endpoint, item, Method.DELETE);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> UpdateItemRequest(string endpoint, object item)
+        {
+            var response = await SendRequestToApi(endpoint, item, Method.PATCH);
             return response;
         }
     }

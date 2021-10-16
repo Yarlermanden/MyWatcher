@@ -14,6 +14,7 @@ namespace MyWatcherFrontend.Services
         public Task<List<UserItemTableDTO>> GetUserItems(User user);
         public Task<(bool, int)> AddUserItem(UserItemAddDTO dto);
         public Task<bool> DeleteUserItem(UserItemDeleteDTO dto);
+        public Task<bool> UpdateUserItem(UserItemUpdateDTO dto);
     }
     
     public class ApiService : IApiService
@@ -64,6 +65,14 @@ namespace MyWatcherFrontend.Services
             var response = await _communicationService.DeleteItemRequest($"/api/useritem/delete", dto);
             if(response.IsSuccessStatusCode) {Console.WriteLine("Succesfully deleted item"); }
             else { Console.WriteLine("Failed posting Item"); }
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdateUserItem(UserItemUpdateDTO dto)
+        {
+            var response = await _communicationService.UpdateItemRequest($"/api/useritem/update", dto);
+            if(response.IsSuccessStatusCode) {Console.WriteLine("Successfully updated Item");}
+            else{Console.WriteLine("Failed updating item");}
             return response.IsSuccessStatusCode;
         }
     }
