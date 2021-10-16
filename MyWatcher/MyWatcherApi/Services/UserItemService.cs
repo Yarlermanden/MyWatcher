@@ -41,7 +41,7 @@ namespace MyWatcher.Services
 
             //check if this userItem already exists
             var userItem = await GetUserItem(dto.UserId, item.Id);
-            if (userItem != null) return userItem.Id;
+            if (userItem != null) return -1;
 
             return await AddUserItem(dto.UserId, item.Id, dto.Name);
         }

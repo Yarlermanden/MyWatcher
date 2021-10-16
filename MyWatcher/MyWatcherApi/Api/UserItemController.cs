@@ -39,17 +39,19 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
             var id = await _userItemService.AddUserItem(dto);
+            if (id == -1)
+            {
+                return new ConflictResult();
+            }
             Log.Information($"Added UserItem with Id {id}");
             return new OkObjectResult(id);
-            //Todo return id - update frontend item with this id
-            //return NoContent();
         }
 
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteUserItem([FromBody] UserItemDeleteDTO dto)
         {
             var success = await _userItemService.DeleteUserItem(dto);
-            //Todo return based on success - tell use if they tried to delete invalid item
+            if (!success) return new ConflictResult();
             return NoContent();
         }
 
@@ -57,7 +59,7 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> UpdateUserItem([FromBody] UserItemUpdateDTO dto)
         {
             var success = await _userItemService.UpdateUserItem(dto);
-            //Todo return based on success
+            if (!success) return new ConflictResult();
             return NoContent();
         }
     }
