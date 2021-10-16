@@ -10,6 +10,7 @@
 
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
+<MudAlert Style="width: 20%; align-self: center" Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="@(() => _alertHidden=true)" hidden="@_alertHidden">@_alertMessage</MudAlert>
 <UserItemTable @ref=@_userItemTable UserItemTableList=@_items OnDelete="@((userItem) => DeleteUserItem(userItem))" OnUpdate="@UpdateUserItem" OnAdd="@AddUserItem"/>
 <AddUserItemComponent @ref=@_addUserItemComponent/>
 
@@ -18,6 +19,8 @@
     private AddUserItemComponent _addUserItemComponent;
     private List<UserItemTableDTO> _items = new List<UserItemTableDTO>();
     private User _user = new User() {Id = 1};
+    private bool _alertHidden = true;
+    private string _alertMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,7 +47,7 @@
         {
             var dto = (UserItemAddDTO)result.Data;
             dto.UserId = _user.Id;
-            var (success, id) = await _apiService.AddUserItem(dto);
+            var (success, id, errorMessage) = await _apiService.AddUserItem(dto);
             if (success)
             {
                 //Get the new item from the database
@@ -55,12 +58,13 @@
                     Id = id
                 };
                 _items.Add(userItemTableDTO);
-                StateHasChanged();
             }
             else
             {
-                //Todo show error alert
+                _alertMessage = errorMessage;
+                _alertHidden = false;
             }
+            StateHasChanged();
         }
     }
     
@@ -81,16 +85,17 @@
                 Id = userItem.Id,
                 UserId = _user.Id
             };
-            var success = await _apiService.DeleteUserItem(dto);
+            var (success, errorMessage) = await _apiService.DeleteUserItem(dto);
             if (success)
             {
                 _items.Remove(userItem);
-                StateHasChanged();
             }
             else
             {
-                //Todo show error alert
+                _alertMessage = errorMessage;
+                _alertHidden = false;
             }
+            StateHasChanged();
         }
     }
 
@@ -102,6 +107,12 @@
             Active = userItem.Active,
             UserId = _user.Id,
         };
-        await _apiService.UpdateUserItem(dto);
+        var (success, errorMessage) = await _apiService.UpdateUserItem(dto);
+        if (!success)
+        {
+            _alertMessage = errorMessage;
+            _alertHidden = false;
+            StateHasChanged();
+        }
     }
 }
