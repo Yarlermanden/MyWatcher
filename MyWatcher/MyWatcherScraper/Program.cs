@@ -48,6 +48,7 @@ namespace MyWatcherScraper
 
             serviceCollection.AddSingleton(configuration);
             serviceCollection.AddTransient<IScrapingService, ScrapingService>();
+            serviceCollection.AddTransient<IExtractService, ExtractService>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             return serviceProvider;

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using MudBlazor.Services;
+using MyWatcher.Services;
 using MyWatcherFrontend;
 using MyWatcherFrontend.Services;
 
