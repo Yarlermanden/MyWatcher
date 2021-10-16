@@ -29,5 +29,11 @@ namespace MyWatcher.Entities
             Name = "";
             LastWeeklyPriceUpdate = DateTime.Now;
         }
+        
+        public double PricePercentageCalculator(double price, double priceLastWeek)
+        {
+            if (price == 0) return 0;
+            return (price - priceLastWeek) / price * 100;
+        }
     }
 }
