@@ -73,6 +73,8 @@ namespace MyWatcher.Services
                     Id = ui.Id,
                     Name = ui.Name,
                     Price = ui.Item.Price,
+                    PriceComparedToLastWeek = ui.Item.PricePercentageCalculator(ui.Item.Price, ui.Item.PriceLastWeek),
+                    LowestPriceKnown = ui.Item.PriceLowestKnown,
                     LastScan = ui.Item.LastScan,
                     Active = ui.Active,
                 })
