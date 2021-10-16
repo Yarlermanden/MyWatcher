@@ -50,5 +50,13 @@ namespace MyWatcherApi.Api
             //Todo return based on success - tell use if they tried to delete invalid item
             return NoContent();
         }
+
+        [HttpPatch("update")]
+        public async Task<IActionResult> UpdateUserItem([FromBody] UserItemUpdateDTO dto)
+        {
+            var success = await _userItemService.UpdateUserItem(dto);
+            //Todo return based on success
+            return NoContent();
+        }
     }
 }
