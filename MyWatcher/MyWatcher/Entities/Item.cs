@@ -8,6 +8,10 @@ namespace MyWatcher.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
+        public double PriceLastWeek { get; set; }
+        public double PriceThisWeek { get; set; }
+        public double PriceLowestKnown { get; set; }
+        public DateTime? LastWeeklyPriceUpdate { get; set; }
         public string URL { get; set; }
         public bool Active { get; set; }
         public DateTime? LastScan { get; set; }
@@ -23,6 +27,7 @@ namespace MyWatcher.Entities
             ServiceId = serviceId;
             Active = true;
             Name = "";
+            LastWeeklyPriceUpdate = DateTime.Now;
         }
     }
 }

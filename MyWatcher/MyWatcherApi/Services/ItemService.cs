@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyWatcher.Entities;
+using MyWatcher.Models;
 
 namespace MyWatcher.Services
 {
@@ -53,6 +54,23 @@ namespace MyWatcher.Services
             await dbContext.Items.AddAsync(item);
             await dbContext.SaveChangesAsync();
             return item.Id;
+        }
+
+        public async Task UpdateItem(ItemUpdateDTO dto)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var item = await dbContext.Items.FindAsync(dto.Id);
+            if (item == null || dto.Price == 0) return;
+            item.Price = dto.Price;
+            item.LastScan = DateTime.Now;
+            if (item.Price < item.PriceLowestKnown || item.PriceLowestKnown == 0) item.PriceLowestKnown = item.Price;
+            if ((item.LastScan - item.LastWeeklyPriceUpdate).Value > TimeSpan.FromDays(7))
+            {
+                item.PriceLastWeek = item.PriceThisWeek;
+                item.PriceThisWeek = item.Price;
+                item.LastWeeklyPriceUpdate = item.LastScan;
+            }
+            await dbContext.SaveChangesAsync();
         }
     }
 }
