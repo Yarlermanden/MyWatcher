@@ -16,6 +16,7 @@
       </PackageReference>
       <PackageReference Include="Npgsql" Version="6.0.0-rc.2" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-rc.2" />
+      <PackageReference Include="RestSharp" Version="106.12.0" />
     </ItemGroup>
 
 </Project>

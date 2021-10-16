@@ -31,6 +31,9 @@ namespace MyWatcherScraper.Services
                 
                 //_scrapingService
                 Console.WriteLine("heylloolo");
+                await _scrapingService.ScrapePrice(
+                    "https://www.pricerunner.dk/pl/1-5261396/Mobiltelefoner/Apple-iPhone-12-64GB-Sammenlign-Priser");
+                //await _scrapingService.Test();
 
             });
 
