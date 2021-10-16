@@ -38,7 +38,6 @@ namespace MyWatcherFrontend.Services
             if (response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(jsonString);
                 var items = JsonSerializer.Deserialize<List<UserItemTableDTO>>(jsonString, _options);
                 return items;
             }

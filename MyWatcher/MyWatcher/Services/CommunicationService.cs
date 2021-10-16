@@ -31,6 +31,7 @@ namespace MyWatcher.Services
         public async Task<HttpResponseMessage> SendRequestToApi(string endpoint, object item, Method requestType)
         {
             var baseUrl = "http://localhost:5000";
+            //Todo this baseUrl should use the one from the respective appsettings.json file
             switch (requestType)
             {
                 case Method.GET:

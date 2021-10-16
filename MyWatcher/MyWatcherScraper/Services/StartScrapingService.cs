@@ -30,11 +30,12 @@ namespace MyWatcherScraper.Services
                 //Listen
                 
                 //_scrapingService
-                Console.WriteLine("heylloolo");
+                /*
                 await _scrapingService.ScrapePrice(
                     "https://www.pricerunner.dk/pl/1-5261396/Mobiltelefoner/Apple-iPhone-12-64GB-Sammenlign-Priser");
-                //await _scrapingService.Test();
-
+                */
+                var serviceId = 1; //given by Api via websocket
+                await _scrapingService.ScrapeAllItemsOfService(serviceId);
             });
 
             return true;
