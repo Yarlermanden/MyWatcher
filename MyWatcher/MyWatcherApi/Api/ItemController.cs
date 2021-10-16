@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,10 @@ namespace MyWatcherApi.Api
             _itemService = itemService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("getAll/{serviceId}")]
         public async Task<List<ItemGetDTO>> GetAllItems(int serviceId)
         {
+            Console.WriteLine("Success");
             return await _itemService.GetAllItemsOfService(serviceId);
         }
 

@@ -36,4 +36,8 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MyWatcher\MyWatcher.csproj" />
+    </ItemGroup>
 </Project>

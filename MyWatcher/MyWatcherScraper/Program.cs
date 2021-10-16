@@ -2,10 +2,12 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MyWatcher.Services;
 using MyWatcherScraper.Services;
 using Serilog;
 using Serilog.Events;
@@ -49,6 +51,8 @@ namespace MyWatcherScraper
             serviceCollection.AddSingleton(configuration);
             serviceCollection.AddTransient<IScrapingService, ScrapingService>();
             serviceCollection.AddTransient<IExtractService, ExtractService>();
+            serviceCollection.AddTransient<ICommunicationService, CommunicationService>();
+            serviceCollection.AddTransient<IApiService, ApiService>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             return serviceProvider;
