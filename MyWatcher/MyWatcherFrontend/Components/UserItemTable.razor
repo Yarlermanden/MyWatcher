@@ -3,17 +3,17 @@
 
 <div>
     <h3>UserItemTable</h3>
-    <MudTable Items="@UserItemTableList" Hover="true" Striped="true" Loading="@LoadingTable" LoadingProgressColor="Color.Info" Filter="new Func<UserItemTableDTO,bool>(FilterFunc1)">
+    <MudTable Items="@UserItemTableList" Hover="true" Striped="true" Loading="@LoadingTable" LoadingProgressColor="Color.Info" Filter="new Func<UserItemTableDTO,bool>(FilterTableFunction)">
         <ToolBarContent>
             <MudSpacer />
                     <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh Style="width: 5%; height:10px"><strong>Id</strong></MudTh>
-            <MudTh Style="width: 40%"><strong>Name</strong></MudTh>
-            <MudTh Style="width: 15%"><strong>Price</strong></MudTh>
-            <MudTh Style="width: 25%"><strong>Last Scanned</strong></MudTh>
-            <MudTh Style="width: 5%"><strong>Active</strong></MudTh>
+            <MudTh Style="width: 5%; height:10px"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Id)"><strong>Id</strong></MudTableSortLabel></MudTh>
+            <MudTh Style="width: 40%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Name)"><strong>Name</strong></MudTableSortLabel></MudTh>
+            <MudTh Style="width: 15%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Price)"><strong>Price</strong></MudTableSortLabel></MudTh>
+            <MudTh Style="width: 25%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.LastScan)"><strong>Last Scanned</strong></MudTableSortLabel></MudTh>
+            <MudTh Style="width: 5%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Active)"><strong>Active</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 5%"><strong></strong></MudTh>
             <MudTh Style="width: 5%; height:10px"><strong></strong></MudTh>
         </HeaderContent>
@@ -81,9 +81,8 @@
         return dateTime.Value.ToString("dddd, dd MMMM yyyy");
     }
     
-    private bool FilterFunc1(UserItemTableDTO element) => FilterFunc(element, _searchText);
-    
-    private bool FilterFunc(UserItemTableDTO element, string searchString)
+    private bool FilterTableFunction(UserItemTableDTO element) => FilterTable(element, _searchText);
+    private bool FilterTable(UserItemTableDTO element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -93,4 +92,5 @@
             //return true;
         return false;
     }
+    
 }
