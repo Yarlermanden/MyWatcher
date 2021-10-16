@@ -5,8 +5,9 @@
     <h3>UserItemTable</h3>
     <MudTable Items="@UserItemTableList" Hover="true" Striped="true" Loading="@LoadingTable" LoadingProgressColor="Color.Info" Filter="new Func<UserItemTableDTO,bool>(FilterTableFunction)">
         <ToolBarContent>
+            <MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Add Items</MudButton>
             <MudSpacer />
-                    <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh Style="width: 5%; height:10px"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Id)"><strong>Id</strong></MudTableSortLabel></MudTh>
@@ -43,6 +44,7 @@
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
     [Parameter] public EventCallback<UserItemTableDTO> OnDelete { get; set; }
     [Parameter] public EventCallback<UserItemTableDTO> OnUpdate { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
     public bool LoadingTable { get; set; } = true;
     private string _searchText;
 
@@ -99,5 +101,10 @@
     {
         dto.Active = !dto.Active;
         await OnUpdate.InvokeAsync(dto);
+    }
+
+    private async Task AddUserItem()
+    {
+        await OnAdd.InvokeAsync();
     }
 }
