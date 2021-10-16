@@ -23,7 +23,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id" Style="height:10px">@context.Id</MudTd>
             <MudTd DataLabel="Name" Style="height:10px">@context.Name</MudTd>
-            <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price)</MudTd>
+            <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price) DKK</MudTd>
             <MudTd DataLabel="LastScan" Style="height:10px">@DateToTime(@context.LastScan)</MudTd>
             <MudTd>
                 @*<MudSwitch @bind-Checked="@context.Active" Label="@(context.Active ? "Active " : "Inactive")" Color="Color.Primary"></MudSwitch>*@
