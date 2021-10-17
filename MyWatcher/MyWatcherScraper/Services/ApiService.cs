@@ -11,6 +11,7 @@ namespace MyWatcherScraper.Services
     public interface IApiService
     {
         public Task<List<ItemGetDTO>> GetAllItems(int serviceId);
+        public Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(ForceRescanRequest forceRescanRequest);
         public Task UpdateItem(ItemUpdateDTO dto);
     }
     
@@ -28,6 +29,21 @@ namespace MyWatcherScraper.Services
         public async Task<List<ItemGetDTO>> GetAllItems(int serviceId)
         {
             var response = await _communicationService.SendGetRequest($"/api/item/getAll/{serviceId}", "");
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Successfully retrieved all items");
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var items = JsonSerializer.Deserialize<List<ItemGetDTO>>(jsonString, _options);
+                return items;
+            }
+            Console.WriteLine("Failed retrieving all items");
+            return null;
+        }
+
+        public async Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(
+            ForceRescanRequest forceRescanRequest)
+        {
+            var response = await _communicationService.SendGetRequest($"/api/item/getFromUserNotRecentlyUpdated/{forceRescanRequest.ServiceId}/{forceRescanRequest.UserId}", "");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully retrieved all items");

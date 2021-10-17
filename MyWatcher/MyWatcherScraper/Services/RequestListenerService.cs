@@ -59,23 +59,6 @@ namespace MyWatcherScraper.Services
                         stream.Write(data, 0, data.Length);
                         
                         ForceRescan(request);
-                        
-                        /*
-                        var bytes = stream.Read(data, 0, data.Length);
-                        if (bytes == 0) continue;
-
-                        BinaryFormatter bf = new BinaryFormatter();
-                        using (MemoryStream ms = new MemoryStream(data))
-                        {
-                            object obj = bf.Deserialize(ms);
-                            ForceRescan((ForceRescanRequest)obj);
-                        }
-                        */
-                        /*
-                        var serializer = new DataContractJsonSerializer(typeof(ForceRescanRequest));
-                        var request = serializer.ReadObject(stream) as ForceRescanRequest;
-                        ForceRescan(request);
-                        */
                     }
                 }
                 catch (Exception e)
@@ -99,7 +82,8 @@ namespace MyWatcherScraper.Services
 
         public async Task ForceRescan(ForceRescanRequest request)
         {
-            await _scrapingService.ScrapeAllItemsOfService(request.ServiceId);
+            //await _scrapingService.ScrapeAllItemsOfService(request.ServiceId);
+            await _scrapingService.ForceScrapeAllItemsOfService(request);
         }
     }
 }

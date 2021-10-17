@@ -17,6 +17,7 @@ namespace MyWatcher.Services
         public Task UpdateItem(ItemUpdateDTO dto);
         public Task<List<ItemGetDTO>> GetAllItemsOfService(int serviceId);
         public Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUser(int serviceId, int userId);
+        public Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUserNotUpdatedLastHour(int serviceId, int userId);
     }
     
     public class ItemService : IItemService
@@ -91,10 +92,23 @@ namespace MyWatcher.Services
         public async Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUser(int serviceId, int userId)
         {
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var items = await dbContext.UserItems.Include(ui => ui.Item)
-                .Where(ui => ui.UserId == userId && ui.Item.ServiceId == serviceId)
-                .Select(ui => new ItemGetDTO(ui.Item))
-                .ToListAsync();
+            var items = await GetAllItemsOfServiceAndUser(serviceId, userId, dbContext);
+            return await items.Select(ui => new ItemGetDTO(ui.Item)).ToListAsync();
+        }
+
+        public async Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUserNotUpdatedLastHour(int serviceId, int userId)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var oneHourAgo = DateTime.UtcNow-TimeSpan.FromHours(1);
+            var items = await GetAllItemsOfServiceAndUser(serviceId, userId, dbContext);
+            return await items.Where(ui => ui.Item.LastScan < oneHourAgo || ui.Item.LastScan == null)
+                .Select(ui => new ItemGetDTO(ui.Item)).ToListAsync();
+        }
+
+        private async Task<IQueryable<UserItem>> GetAllItemsOfServiceAndUser(int serviceId, int userId, DatabaseContext dbContext)
+        {
+            var items = dbContext.UserItems.Include(ui => ui.Item)
+                .Where(ui => ui.UserId == userId && ui.Item.ServiceId == serviceId);
             return items;
         }
     }
