@@ -79,6 +79,7 @@ namespace MyWatcher.Services
                     LastScan = ui.Item.LastScan,
                     Active = ui.Active,
                 })
+                .OrderByDescending(ui => ui.Id)
                 .ToListAsync();
         }
 

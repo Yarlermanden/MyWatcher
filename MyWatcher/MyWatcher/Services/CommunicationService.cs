@@ -14,7 +14,7 @@ namespace MyWatcher.Services
         public Task<HttpResponseMessage> SendGetRequest(string endpoint, object item);
         public Task<HttpResponseMessage> PostItemRequest(string endpoint, object item);
         public Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item);
-        public Task<HttpResponseMessage> UpdateItemRequest(string endpoint, object item);
+        public Task<HttpResponseMessage> PatchRequest(string endpoint, object item);
     }
 
     public class CommunicationService : ICommunicationService
@@ -87,7 +87,7 @@ namespace MyWatcher.Services
             return response;
         }
 
-        public async Task<HttpResponseMessage> UpdateItemRequest(string endpoint, object item)
+        public async Task<HttpResponseMessage> PatchRequest(string endpoint, object item)
         {
             var response = await SendRequestToApi(endpoint, item, Method.PATCH);
             return response;

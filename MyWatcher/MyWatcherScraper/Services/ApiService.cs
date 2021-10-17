@@ -41,7 +41,7 @@ namespace MyWatcherScraper.Services
 
         public async Task UpdateItem(ItemUpdateDTO dto)
         {
-            var response = await _communicationService.UpdateItemRequest($"/api/item/updateItem", dto);
+            var response = await _communicationService.PatchRequest($"/api/item/updateItem", dto);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully updated item");

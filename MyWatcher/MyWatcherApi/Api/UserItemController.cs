@@ -14,12 +14,15 @@ namespace MyWatcherApi.Api
     {
         private readonly IUserItemService _userItemService;
         private readonly IItemService _itemService;
+        private readonly IScraperSocketService _scraperSocketService;
         
         public UserItemController(IUserItemService userItemService,
-            IItemService itemService) 
+            IItemService itemService,
+            IScraperSocketService scraperSocketService) 
         {
             _userItemService = userItemService;
             _itemService = itemService;
+            _scraperSocketService = scraperSocketService;
         }
 
         [HttpGet("test")] //api/useritem/test
@@ -59,6 +62,14 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> UpdateUserItem([FromBody] UserItemUpdateDTO dto)
         {
             var success = await _userItemService.UpdateUserItem(dto);
+            if (!success) return new ConflictResult();
+            return NoContent();
+        }
+
+        [HttpPatch("forceRescan")]
+        public async Task<IActionResult> ForceRescan([FromBody] ForceRescanRequest request)
+        {
+            var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
             if (!success) return new ConflictResult();
             return NoContent();
         }
