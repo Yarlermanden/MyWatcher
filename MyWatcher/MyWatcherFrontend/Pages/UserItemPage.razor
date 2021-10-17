@@ -97,13 +97,9 @@
             if (success)
             {
                 _items.Remove(userItem);
+                StateHasChanged();
             }
-            else
-            {
-                _alertMessage = errorMessage;
-                _alertHidden = false;
-            }
-            StateHasChanged();
+            else ShowErrorMessage(errorMessage);
         }
     }
 
@@ -116,12 +112,7 @@
             UserId = _user.Id,
         };
         var (success, errorMessage) = await _apiService.UpdateUserItem(dto);
-        if (!success)
-        {
-            _alertMessage = errorMessage;
-            _alertHidden = false;
-            StateHasChanged();
-        }
+        if (!success) ShowErrorMessage(errorMessage);
     }
 
     private async Task RefreshUserItems()
@@ -140,5 +131,13 @@
             UserId = _user.Id
         };
         var success = await _apiService.ForceRescanUserItems(request);
+        if (!success) ShowErrorMessage("Scraper service not running");
+    }
+
+    private void ShowErrorMessage(string errorMessage)
+    {
+        _alertMessage = errorMessage;
+        _alertHidden = false;
+        StateHasChanged();
     }
 }
