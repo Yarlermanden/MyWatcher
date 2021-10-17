@@ -7,7 +7,7 @@
         <ToolBarContent>
             <MudButton @onclick="@(() => OnRefresh.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center; margin-right: 20px">Refresh</MudButton>
             <MudButton @onclick="@(() => OnAdd.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center; margin-right: 20px">Add Items</MudButton>
-            <MudButton @onclick="@(() => OnForceRescan.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Force rescan</MudButton>
+            <MudButton @onclick="@(() => OnForceRescan.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Rescan</MudButton>
             <MudSpacer />
             <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
