@@ -17,6 +17,7 @@ namespace MyWatcherFrontend.Services
         public Task<(bool, int, string)> AddUserItem(UserItemAddDTO dto);
         public Task<(bool, string)> DeleteUserItem(UserItemDeleteDTO dto);
         public Task<(bool, string)> UpdateUserItem(UserItemUpdateDTO dto);
+        public Task<bool> ForceRescanUserItems(ForceRescanRequest request);
     }
     
     public class ApiService : IApiService
@@ -81,7 +82,7 @@ namespace MyWatcherFrontend.Services
 
         public async Task<(bool, string)> UpdateUserItem(UserItemUpdateDTO dto)
         {
-            var response = await _communicationService.UpdateItemRequest($"/api/useritem/update", dto);
+            var response = await _communicationService.PatchRequest($"/api/useritem/update", dto);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully updated Item");
@@ -91,6 +92,21 @@ namespace MyWatcherFrontend.Services
             {
                 Console.WriteLine("Failed updating item");
                 return (false, "Failed to update this item");
+            }
+        }
+
+        public async Task<bool> ForceRescanUserItems(ForceRescanRequest request)
+        {
+            var response = await _communicationService.PatchRequest($"/api/useritem/forceRescan", request);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Successfully forced rescan");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Failed to force rescan");
+                return false;
             }
         }
     }

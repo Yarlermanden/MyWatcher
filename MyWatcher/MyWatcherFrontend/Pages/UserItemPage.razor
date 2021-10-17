@@ -64,7 +64,8 @@
                     Active = true,
                     Id = id
                 };
-                _items.Add(userItemTableDTO);
+                //_items.Add(userItemTableDTO);
+                _items.Insert(0, userItemTableDTO);
             }
             else
             {
@@ -133,6 +134,11 @@
     private async Task ForceRescan()
     {
         Console.WriteLine("Force rescan");
-        
+        var request = new ForceRescanRequest()
+        {
+            ServiceId = 1,
+            UserId = _user.Id
+        };
+        var success = await _apiService.ForceRescanUserItems(request);
     }
 }
