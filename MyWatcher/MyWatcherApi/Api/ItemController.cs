@@ -22,7 +22,6 @@ namespace MyWatcherApi.Api
         [HttpGet("getAll/{serviceId}")]
         public async Task<List<ItemGetDTO>> GetAllItems(int serviceId)
         {
-            Console.WriteLine("Success");
             return await _itemService.GetAllItemsOfService(serviceId);
         }
 

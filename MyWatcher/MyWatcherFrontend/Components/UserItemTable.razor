@@ -5,7 +5,9 @@
     <h3>UserItemTable</h3>
     <MudTable Items="@UserItemTableList" Hover="true" Striped="true" Loading="@LoadingTable" LoadingProgressColor="Color.Info" Filter="new Func<UserItemTableDTO,bool>(FilterTableFunction)">
         <ToolBarContent>
-            <MudButton @onclick="AddUserItem" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Add Items</MudButton>
+            <MudButton @onclick="@(() => OnRefresh.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center; margin-right: 20px">Refresh</MudButton>
+            <MudButton @onclick="@(() => OnAdd.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center; margin-right: 20px">Add Items</MudButton>
+            <MudButton @onclick="@(() => OnForceRescan.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary" Style="align-self: center">Force rescan</MudButton>
             <MudSpacer />
             <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -23,7 +25,7 @@
         <RowTemplate>
             <MudTd DataLabel="Id" Style="height:10px">@context.Id</MudTd>
             <MudTd DataLabel="Name" Style="height:10px">@context.Name</MudTd>
-            <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price) DKK</MudTd>
+            <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price)</MudTd>
             <MudTd DataLabel="LastScan" Style="height:10px">@DateToTime(@context.LastScan)</MudTd>
             <MudTd>
                 @*<MudSwitch @bind-Checked="@context.Active" Label="@(context.Active ? "Active " : "Inactive")" Color="Color.Primary"></MudSwitch>*@
@@ -44,9 +46,12 @@
     [Parameter] public List<UserItemTableDTO> UserItemTableList { get; set; }
     [Parameter] public EventCallback<UserItemTableDTO> OnDelete { get; set; }
     [Parameter] public EventCallback<UserItemTableDTO> OnUpdate { get; set; }
+    [Parameter] public EventCallback OnRefresh { get; set; }
     [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback OnForceRescan { get; set; }
     public bool LoadingTable { get; set; } = true;
     private string _searchText;
+    private string _currency = "DKK";
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
@@ -76,7 +81,7 @@
     private string ShowPriceText(double price)
     {
         if (price == 0) return "Unknown";
-        return price.ToString();
+        return price + " " + _currency;
     }
 
     private string DateToTime(DateTime? dateTime)

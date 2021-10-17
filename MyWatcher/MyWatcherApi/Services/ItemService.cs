@@ -66,6 +66,7 @@ namespace MyWatcher.Services
             var item = await dbContext.Items.FindAsync(dto.Id);
             if (item == null || dto.Price == 0) return;
             item.Price = dto.Price;
+            if (item.PriceThisWeek == 0) item.PriceThisWeek = item.Price;
             item.LastScan = DateTime.UtcNow;
             if (item.Price < item.PriceLowestKnown || item.PriceLowestKnown == 0) item.PriceLowestKnown = item.Price;
             if ((item.LastScan - item.LastWeeklyPriceUpdate).Value > TimeSpan.FromDays(7))

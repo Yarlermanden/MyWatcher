@@ -11,7 +11,14 @@
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
 <MudAlert Style="width: 20%; align-self: center" Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="@(() => _alertHidden=true)" hidden="@_alertHidden">@_alertMessage</MudAlert>
-<UserItemTable @ref=@_userItemTable UserItemTableList=@_items OnDelete="@((userItem) => DeleteUserItem(userItem))" OnUpdate="@UpdateUserItem" OnAdd="@AddUserItem"/>
+<UserItemTable @ref=@_userItemTable 
+               UserItemTableList=@_items 
+               OnDelete="@((userItem) => DeleteUserItem(userItem))" 
+               OnUpdate="@UpdateUserItem" 
+               OnAdd="@AddUserItem"
+               OnRefresh="@RefreshUserItems" 
+               OnForceRescan="@ForceRescan"
+/>
 <AddUserItemComponent @ref=@_addUserItemComponent/>
 
 @code {
@@ -114,5 +121,18 @@
             _alertHidden = false;
             StateHasChanged();
         }
+    }
+
+    private async Task RefreshUserItems()
+    {
+        _userItemTable.LoadingTable = true;
+        _items = await _apiService.GetUserItems(_user);
+        _userItemTable.LoadingTable = false;
+    }
+
+    private async Task ForceRescan()
+    {
+        Console.WriteLine("Force rescan");
+        
     }
 }
