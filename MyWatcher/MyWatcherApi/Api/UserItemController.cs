@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using MyWatcherApi.Hubs;
 using MyWatcher.Models;
 using MyWatcher.Services;
 using Serilog;
@@ -15,14 +17,17 @@ namespace MyWatcherApi.Api
         private readonly IUserItemService _userItemService;
         private readonly IItemService _itemService;
         private readonly IScraperSocketService _scraperSocketService;
+        private readonly CommunicationHub _communicationHub;
         
         public UserItemController(IUserItemService userItemService,
             IItemService itemService,
-            IScraperSocketService scraperSocketService) 
+            IScraperSocketService scraperSocketService,
+            CommunicationHub communicationHub) 
         {
             _userItemService = userItemService;
             _itemService = itemService;
             _scraperSocketService = scraperSocketService;
+            _communicationHub = communicationHub;
         }
 
         [HttpGet("test")] //api/useritem/test
@@ -70,6 +75,8 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> ForceRescan([FromBody] ForceRescanRequest request)
         {
             var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
+            Thread.Sleep(5000);
+            await _communicationHub.ScrapingFinished();
             if (!success) return new ConflictResult();
             return NoContent();
         }

@@ -12,6 +12,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-rc.2.21480.10" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0-rc.2.21480.10" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-rc.2.21480.10" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0-rc.2.21480.10" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.0-rc.2.21480.10" />
         <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.4" />
         <PackageReference Include="MudBlazor" Version="5.1.5" />
         <PackageReference Include="RestSharp" Version="106.12.0" />

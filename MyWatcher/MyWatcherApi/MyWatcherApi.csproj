@@ -18,6 +18,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-rc.2.21480.10" />
       <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-rc.2.21480.10" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.0-rc.2.21480.10" />
       <PackageReference Include="Microsoft.Bot.Connector" Version="4.14.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.2.21480.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-rc.2.21480.5">

@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyWatcher.Entities;
+using MyWatcherApi.Hubs;
 using MyWatcher.Services;
 using MyWatcherApi.Api;
 
@@ -32,7 +34,8 @@ namespace MyWatcherApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllersWithViews();
             services.AddAntiforgery(options => { options.Cookie.SecurePolicy = CookieSecurePolicy.Always; });
             AuthenticationConfiguration authenticationConfiguration = new AuthenticationConfiguration();
             Configuration.Bind("Authentication", authenticationConfiguration);
@@ -78,6 +81,24 @@ namespace MyWatcherApi
                 };
             });
 
+            services.AddSignalR(e =>
+            {
+                e.MaximumReceiveMessageSize = 100_000;
+            }).AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+                //.AddMessagePackProtocol();
+            //services.AddSignalR();
+
+            services.AddRazorPages();
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
+
+            services.AddSingleton<CommunicationHub>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IUserItemService, UserItemService>();
             services.AddTransient<IUserService, UserService>();
@@ -86,19 +107,25 @@ namespace MyWatcherApi
 
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
         {
+            //app.UseHttpsRedirection();
+            //app.UseBlazorFrameworkFiles();
+            app.UseStaticFiles();
+            app.UseResponseCompression();
             app.UseRouting();
-            //app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+                endpoints.MapHub<CommunicationHub>("/CommunicationHub");
+                //endpoints.MapBlazorHub();
                 /*
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=api}/{action=Index}/{id?}"
                 );
                 */
-                endpoints.MapControllers();
             });
             ApplicationDbInitializer.SeedUsers(dbContextFactory);
         }

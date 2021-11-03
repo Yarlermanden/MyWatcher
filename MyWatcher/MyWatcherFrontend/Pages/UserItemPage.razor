@@ -3,10 +3,13 @@
 @using MyWatcherFrontend.Services
 @using MyWatcher.Entities
 @using MyWatcherFrontend.Components
+@using Microsoft.AspNetCore.SignalR.Client
 @inject HttpClient Http
 @inject IApiService _apiService
 @using MudBlazor
 @inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
 
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
@@ -24,15 +27,18 @@
 @code {
     private UserItemTable _userItemTable;
     private AddUserItemComponent _addUserItemComponent;
-    private List<UserItemTableDTO> _items = new List<UserItemTableDTO>();
+    private List<UserItemTableDTO> _items;
     private User _user = new User() {Id = 1};
     private bool _alertHidden = true;
     private string _alertMessage;
+    private HubConnection? _hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
         _userItemTable = new UserItemTable();
+        _items = new List<UserItemTableDTO>();
         _addUserItemComponent = new AddUserItemComponent();
+        await SetupHubConnection();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -43,6 +49,25 @@
             _userItemTable.LoadingTable = false;
             StateHasChanged();
         }
+    }
+    
+    private async Task SetupHubConnection()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            //.WithUrl(NavigationManager.ToAbsoluteUri($"/HubService?userId={_user.Id}"))
+            //.WithUrl(NavigationManager.ToAbsoluteUri($"/CommunicationHub?userId={_user.Id}"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://localhost:5001/CommunicationHub"))
+            //.AddMessagePackProtocol()
+            .Build();
+
+        _hubConnection.On("ScrapingFinished", async () =>
+        {
+            await RefreshUserItems();
+        //Update all items
+        //Give notification if user started the scraping
+        });
+        //HubConnection.On("UpdateUserItem", )
+        await _hubConnection.StartAsync();
     }
 
     private async Task AddUserItem()
@@ -139,5 +164,18 @@
         _alertMessage = errorMessage;
         _alertHidden = false;
         StateHasChanged();
+    }
+    
+    public virtual async ValueTask DisposeAsync()
+    {
+        if (_hubConnection == null) return;
+        try
+        {
+            await _hubConnection.StopAsync();
+        }
+        finally
+        {
+            await _hubConnection.DisposeAsync();
+        }
     }
 }

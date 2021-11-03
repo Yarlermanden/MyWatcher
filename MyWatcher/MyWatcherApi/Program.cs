@@ -21,6 +21,7 @@ namespace MyWatcherApi
             var host = CreateHostBuilder(args).Build();
             
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+            Console.WriteLine(environment);
             var isDevelopment = environment == Environments.Development;
             
             if (isDevelopment)
@@ -61,10 +62,12 @@ namespace MyWatcherApi
 
                 try
                 {
+                    Console.WriteLine("Migrate database");
                     context.Database.Migrate();
                 }
                 catch (Exception exception)
                 {
+                    Console.WriteLine(exception.Message);
                     logger.LogError(exception, "Failed to ensure the database was created");
                     Log.Error("{0} Failed to ensure the database was created", exception);
                     return 1;
