@@ -98,7 +98,8 @@ namespace MyWatcherApi
                     new[] { "application/octet-stream" });
             });
 
-            services.AddSingleton<CommunicationHub>();
+            services.AddSingleton<ServerHub>();
+            services.AddSingleton<ClientHub>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IUserItemService, UserItemService>();
             services.AddTransient<IUserService, UserService>();
@@ -118,7 +119,8 @@ namespace MyWatcherApi
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapHub<CommunicationHub>("/CommunicationHub");
+                endpoints.MapHub<ClientHub>("/ClientHub");
+                endpoints.MapHub<ServerHub>("/ServerHub");
                 //endpoints.MapBlazorHub();
                 /*
                 endpoints.MapControllerRoute(

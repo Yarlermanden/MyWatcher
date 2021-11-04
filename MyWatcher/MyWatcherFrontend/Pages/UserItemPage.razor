@@ -10,6 +10,7 @@
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
+@inject ISnackbar _snackbar
 
 <h1>Pricerunner Items</h1>
 <p>The following table shows all the items you track</p>
@@ -56,16 +57,18 @@
         _hubConnection = new HubConnectionBuilder()
             //.WithUrl(NavigationManager.ToAbsoluteUri($"/HubService?userId={_user.Id}"))
             //.WithUrl(NavigationManager.ToAbsoluteUri($"/CommunicationHub?userId={_user.Id}"))
-            .WithUrl(NavigationManager.ToAbsoluteUri("https://localhost:5001/CommunicationHub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://localhost:5001/ClientHub"))
             //.AddMessagePackProtocol()
             .Build();
 
         _hubConnection.On("ScrapingFinished", async () =>
         {
+            _snackbar.Add("Scraping finished", Severity.Success);
             await RefreshUserItems();
-        //Update all items
-        //Give notification if user started the scraping
+            //Update all items
+            //Give notification if user started the scraping
         });
+        
         //HubConnection.On("UpdateUserItem", )
         await _hubConnection.StartAsync();
     }
@@ -145,6 +148,7 @@
         _userItemTable.LoadingTable = true;
         _items = await _apiService.GetUserItems(_user);
         _userItemTable.LoadingTable = false;
+        StateHasChanged();
     }
 
     private async Task ForceRescan()

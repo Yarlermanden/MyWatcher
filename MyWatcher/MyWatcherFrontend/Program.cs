@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using MudBlazor;
 using MudBlazor.Services;
 using MyWatcher.Services;
 using MyWatcherFrontend;
@@ -22,7 +23,11 @@ namespace MyWatcherFrontend
             builder.RootComponents.Add<HeadOutlet>("head::after");
             
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddMudServices();
+            builder.Services.AddMudServices(config =>
+            {
+                config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+                config.SnackbarConfiguration.VisibleStateDuration = 3000;
+            });
             builder.Services.AddSingleton<ICommunicationService, CommunicationService>();
             builder.Services.AddSingleton<IApiService, ApiService>();
 
