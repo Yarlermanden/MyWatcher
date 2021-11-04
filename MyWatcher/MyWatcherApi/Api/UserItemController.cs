@@ -18,16 +18,19 @@ namespace MyWatcherApi.Api
         private readonly IItemService _itemService;
         private readonly IScraperSocketService _scraperSocketService;
         private readonly ClientHub _clientHub;
+        private readonly ServerHub _serverHub;
         
         public UserItemController(IUserItemService userItemService,
             IItemService itemService,
             IScraperSocketService scraperSocketService,
-            ClientHub clientHub) 
+            ClientHub clientHub,
+            ServerHub serverHub) 
         {
             _userItemService = userItemService;
             _itemService = itemService;
             _scraperSocketService = scraperSocketService;
             _clientHub = clientHub;
+            _serverHub = serverHub;
         }
 
         [HttpGet("test")] //api/useritem/test
@@ -77,7 +80,6 @@ namespace MyWatcherApi.Api
             var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
             Thread.Sleep(5000);
             if (!success) { return new ConflictResult(); }
-            await _clientHub.ScrapingFinished();
             return NoContent();
         }
     }

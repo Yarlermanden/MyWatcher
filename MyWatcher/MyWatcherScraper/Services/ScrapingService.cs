@@ -34,12 +34,14 @@ namespace MyWatcherScraper.Services
         {
             var items = await _apiService.GetAllItems(serviceId);
             await ScrapeAllItems(items);
+            await _apiService.SendScrapingComplete(null, serviceId);
         }
 
         public async Task ForceScrapeAllItemsOfService(ForceRescanRequest request)
         {
             var items = await _apiService.GetAllItemsFromUserAndServiceNotRecentlyScanned(request);
             await ScrapeAllItems(items);
+            await _apiService.SendScrapingComplete(request.UserId, request.ServiceId);
         }
 
         public async Task ScrapeAllItems(List<ItemGetDTO> items)

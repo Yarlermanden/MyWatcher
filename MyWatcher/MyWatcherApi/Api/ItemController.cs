@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyWatcher.Entities;
 using MyWatcher.Models;
 using MyWatcher.Services;
+using MyWatcherApi.Hubs;
 
 namespace MyWatcherApi.Api
 {
@@ -13,10 +14,12 @@ namespace MyWatcherApi.Api
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
+        private readonly ClientHub _clientHub;
 
-        public ItemController(IItemService itemService)
+        public ItemController(IItemService itemService, ClientHub clientHub)
         {
             _itemService = itemService;
+            _clientHub = clientHub;
         }
 
         [HttpGet("getAll/{serviceId}")]
@@ -41,6 +44,13 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> UpdateItem([FromBody] ItemUpdateDTO dto)
         {
             await _itemService.UpdateItem(dto);
+            return NoContent();
+        }
+        
+        [HttpPost("scrapingCompleted")]
+        public async Task<IActionResult> ScrapingCompleted([FromBody] ScrapingCompleteDTO dto)
+        {
+            await _clientHub.ScrapingFinished(dto);
             return NoContent();
         }
     }

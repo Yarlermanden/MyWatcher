@@ -13,6 +13,7 @@ namespace MyWatcherScraper.Services
         public Task<List<ItemGetDTO>> GetAllItems(int serviceId);
         public Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(ForceRescanRequest forceRescanRequest);
         public Task UpdateItem(ItemUpdateDTO dto);
+        public Task SendScrapingComplete(int? userId, int serviceId);
     }
     
     public class ApiService : IApiService
@@ -66,6 +67,14 @@ namespace MyWatcherScraper.Services
             {
                 Console.WriteLine("Failed to update item");
             }
+        }
+
+        public async Task SendScrapingComplete(int? userId, int serviceId)
+        {
+            ScrapingCompleteDTO dto = new ScrapingCompleteDTO() {UserId = userId, ServiceId = serviceId};
+            var response = await _communicationService.PostItemRequest($"/api/item/scrapingCompleted", dto);
+            if (response.IsSuccessStatusCode) Console.WriteLine("Successfully completed scraping");
+            else Console.WriteLine("Failed completing scraping");
         }
     }
 }
