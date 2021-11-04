@@ -57,9 +57,9 @@ namespace MyWatcherFrontend.Services
             }
             else
             {
-                Console.WriteLine("Failed posting Item");
                 var errorMessage = "";
                 if (response.StatusCode == HttpStatusCode.Conflict) errorMessage = "Item already exists";
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable) errorMessage = "Couldn't reach API";
                 return (response.IsSuccessStatusCode, -1, errorMessage);
             }
         }
@@ -74,9 +74,10 @@ namespace MyWatcherFrontend.Services
             }
             else
             {
-                Console.WriteLine("Failed deleting Item");
-                //return (false, "This item can't be deleted");
-                return (false, "Failed to delete this item");
+                var errorMessage = "";
+                if (response.StatusCode == HttpStatusCode.Conflict) errorMessage = "Couldn't find item";
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable) errorMessage = "Couldn't reach API";
+                return (false, errorMessage);
             }
         }
 

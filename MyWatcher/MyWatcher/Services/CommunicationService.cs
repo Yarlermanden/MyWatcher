@@ -71,26 +71,51 @@ namespace MyWatcher.Services
 
         public async Task<HttpResponseMessage> SendGetRequest(string endpoint, object item)
         {
-            var response = await SendRequestToApi(endpoint, item, Method.GET);
-            return response;
+            try
+            {
+                return await SendRequestToApi(endpoint, item, Method.GET);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
         }
 
         public async Task<HttpResponseMessage> PostItemRequest(string endpoint, object item)
         {
-            var response = await SendRequestToApi(endpoint, item, Method.POST);
-            return response;
+            try
+            {
+                return await SendRequestToApi(endpoint, item, Method.POST);
+            }
+            catch (Exception e)
+            {
+                return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+            }
         }
 
         public async Task<HttpResponseMessage> DeleteItemRequest(string endpoint, object item)
         {
-            var response = await SendRequestToApi(endpoint, item, Method.DELETE);
-            return response;
+            try
+            {
+                return await SendRequestToApi(endpoint, item, Method.DELETE);
+            }
+            catch (Exception e)
+            {
+                return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+            }
         }
 
         public async Task<HttpResponseMessage> PatchRequest(string endpoint, object item)
         {
-            var response = await SendRequestToApi(endpoint, item, Method.PATCH);
-            return response;
+            try
+            {
+                return await SendRequestToApi(endpoint, item, Method.PATCH);
+            }
+            catch (Exception e)
+            {
+                return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+            }
         }
     }
 }

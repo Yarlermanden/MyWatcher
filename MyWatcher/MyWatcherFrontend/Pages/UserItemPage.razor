@@ -65,12 +65,19 @@
         {
             _snackbar.Add("Scraping finished", Severity.Success);
             await RefreshUserItems();
-            //Update all items
             //Give notification if user started the scraping
         });
         
         //HubConnection.On("UpdateUserItem", )
-        await _hubConnection.StartAsync();
+
+        try
+        {
+            await _hubConnection.StartAsync();
+        }
+        catch (Exception e)
+        {
+            _snackbar.Add("Couldn't reach API", Severity.Error);
+        }
     }
 
     private async Task AddUserItem()
@@ -94,11 +101,13 @@
                 };
                 //_items.Add(userItemTableDTO);
                 _items.Insert(0, userItemTableDTO);
+                _snackbar.Add("Item added", Severity.Success);
             }
             else
             {
                 _alertMessage = errorMessage;
                 _alertHidden = false;
+                _snackbar.Add(errorMessage, Severity.Error);
             }
             StateHasChanged();
         }
@@ -126,8 +135,13 @@
             {
                 _items.Remove(userItem);
                 StateHasChanged();
+                _snackbar.Add("Deleted item", Severity.Success);
             }
-            else ShowErrorMessage(errorMessage);
+            else
+            {
+                ShowErrorMessage(errorMessage);
+                _snackbar.Add(errorMessage, Severity.Error);
+            }
         }
     }
 
