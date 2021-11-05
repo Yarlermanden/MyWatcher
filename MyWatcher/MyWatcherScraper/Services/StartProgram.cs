@@ -7,15 +7,10 @@ namespace MyWatcherScraper.Services
 {
     public class StartProgram : ServiceControl
     {
-        private IScrapingService _scrapingService;
-        private IRequestListenerService _requestListenerService;
         private readonly ISignalRSocket _signalRSocket;
 
-        public StartProgram(IScrapingService scrapingService, IRequestListenerService requestListenerService,
-            ISignalRSocket signalRSocket)
+        public StartProgram(ISignalRSocket signalRSocket)
         {
-            _scrapingService = scrapingService;
-            _requestListenerService = requestListenerService;
             _signalRSocket = signalRSocket;
         }
 
@@ -30,20 +25,9 @@ namespace MyWatcherScraper.Services
 
             policy.ExecuteAsync(async () =>
             {
-                //Todo Create websocket connection
-                
-                //Listen
-                
-                //_scrapingService
-                /*
-                await _scrapingService.ScrapePrice(
-                    "https://www.pricerunner.dk/pl/1-5261396/Mobiltelefoner/Apple-iPhone-12-64GB-Sammenlign-Priser");
-                */
-                var serviceId = 1; //given by Api via websocket
+                var serviceId = 1; 
 
                 await _signalRSocket.Connect();
-                
-                //await _requestListenerService.StartListening();
             });
 
             return true;

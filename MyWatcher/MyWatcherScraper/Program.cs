@@ -26,11 +26,9 @@ namespace MyWatcherScraper
             {
                 x.Service<StartProgram>(sc =>
                 {
-                    var scrapingService = services.GetRequiredService<IScrapingService>();
-                    var requestListenerService = services.GetRequiredService<IRequestListenerService>();
                     var signalRSocket = services.GetRequiredService<ISignalRSocket>();
 
-                    sc.ConstructUsing(name => new StartProgram(scrapingService, requestListenerService, signalRSocket));
+                    sc.ConstructUsing(name => new StartProgram(signalRSocket));
                     sc.WhenStarted((service, control) => service.Start(control));
                     sc.WhenStopped((service, control) => service.Stop(control));
                 });
@@ -57,7 +55,6 @@ namespace MyWatcherScraper
             serviceCollection.AddTransient<IExtractService, ExtractService>();
             serviceCollection.AddTransient<ICommunicationService, CommunicationService>();
             serviceCollection.AddTransient<IApiService, ApiService>();
-            serviceCollection.AddSingleton<IRequestListenerService, RequestListenerService>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             return serviceProvider;

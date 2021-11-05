@@ -16,19 +16,16 @@ namespace MyWatcherApi.Api
     {
         private readonly IUserItemService _userItemService;
         private readonly IItemService _itemService;
-        private readonly IScraperSocketService _scraperSocketService;
         private readonly ClientHub _clientHub;
         private readonly ServerHub _serverHub;
         
         public UserItemController(IUserItemService userItemService,
             IItemService itemService,
-            IScraperSocketService scraperSocketService,
             ClientHub clientHub,
             ServerHub serverHub) 
         {
             _userItemService = userItemService;
             _itemService = itemService;
-            _scraperSocketService = scraperSocketService;
             _clientHub = clientHub;
             _serverHub = serverHub;
         }

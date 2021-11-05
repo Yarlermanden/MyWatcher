@@ -103,7 +103,6 @@ namespace MyWatcherApi
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IUserItemService, UserItemService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddSingleton<IScraperSocketService, ScraperSocketService>();
         }
 
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)

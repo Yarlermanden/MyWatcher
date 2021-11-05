@@ -58,7 +58,6 @@ namespace MyWatcherApi
             {
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
                 var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-                var scraperSocketService = scope.ServiceProvider.GetRequiredService<IScraperSocketService>();
 
                 try
                 {
