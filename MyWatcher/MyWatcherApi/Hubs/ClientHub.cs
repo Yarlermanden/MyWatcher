@@ -31,7 +31,6 @@ namespace MyWatcherApi.Hubs
         {
             if (dto.UserId == null) await Clients.All.SendAsync("ScrapingFinished");
             else await Clients.Group(dto.UserId.ToString()).SendAsync("ScrapingFinished");
-            await Clients.All.SendAsync("ScrapingFinished");
         }
     }
 }

@@ -25,8 +25,12 @@ namespace MyWatcherFrontend
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices(config =>
             {
+                config.SnackbarConfiguration.PreventDuplicates = false;
+                config.SnackbarConfiguration.NewestOnTop = false;
                 config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
                 config.SnackbarConfiguration.VisibleStateDuration = 3000;
+                config.SnackbarConfiguration.HideTransitionDuration = 400;
+                config.SnackbarConfiguration.ShowTransitionDuration = 200;
             });
             builder.Services.AddSingleton<ICommunicationService, CommunicationService>();
             builder.Services.AddSingleton<IApiService, ApiService>();
