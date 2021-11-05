@@ -16,11 +16,12 @@ public class SignalRSocket : ISignalRSocket
 {
     //private ConnectionInfo _connection;
     //private readonly ConfigService _configService;
+    private readonly IScrapingService _scrapingService;
     public HubConnection HubConnection { get; set; }
 
-    public SignalRSocket()
+    public SignalRSocket(IScrapingService scrapingService)
     {
-        
+        _scrapingService = scrapingService;
     }
 
     public async Task Connect()
@@ -30,10 +31,12 @@ public class SignalRSocket : ISignalRSocket
             //.AddMessagePackProtocol()
             .Build();
 
-        HubConnection.On<string>("StartUserScraping", (s) =>
+        HubConnection.On<string>("StartUserScraping", async (s) =>
         {
             var request = JsonSerializer.Deserialize<ForceRescanRequest>(s);
             Console.WriteLine($"Received {request} via SignalR");
+            if (request == null) return;
+            await _scrapingService.ForceScrapeAllItemsOfService(request);
         });
 
         await HubConnection.StartAsync();

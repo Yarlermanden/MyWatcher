@@ -10,8 +10,8 @@ namespace MyWatcherApi.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-            Log.Information($"Client {Context.ConnectionId} connected");
             var group = Context.GetHttpContext().Request.Query["userId"];
+            Log.Information($"Client {Context.ConnectionId} connected belonging to group {group}");
     
             string value = !string.IsNullOrEmpty(group.ToString()) ? group.ToString() : "default";
     
@@ -30,7 +30,7 @@ namespace MyWatcherApi.Hubs
         public async Task ScrapingFinished(ScrapingCompleteDTO dto)
         {
             if (dto.UserId == null) await Clients.All.SendAsync("ScrapingFinished");
-            else await Clients.Group(dto.UserId.ToString()).SendAsync("scrapingFinished");
+            else await Clients.Group(dto.UserId.ToString()).SendAsync("ScrapingFinished");
             await Clients.All.SendAsync("ScrapingFinished");
         }
     }

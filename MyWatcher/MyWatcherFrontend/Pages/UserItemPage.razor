@@ -55,9 +55,7 @@
     private async Task SetupHubConnection()
     {
         _hubConnection = new HubConnectionBuilder()
-            //.WithUrl(NavigationManager.ToAbsoluteUri($"/HubService?userId={_user.Id}"))
-            //.WithUrl(NavigationManager.ToAbsoluteUri($"/CommunicationHub?userId={_user.Id}"))
-            .WithUrl(NavigationManager.ToAbsoluteUri("https://localhost:5001/ClientHub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri($"https://localhost:5001/ClientHub?userId={_user.Id}"))
             //.AddMessagePackProtocol()
             .Build();
 

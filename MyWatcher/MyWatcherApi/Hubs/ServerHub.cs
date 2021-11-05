@@ -19,7 +19,7 @@ public class ServerHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Log.Information($"Client {Context.ConnectionId} disconnected");
+        Log.Information($"Server {Context.ConnectionId} disconnected");
         await base.OnConnectedAsync();
     }
     

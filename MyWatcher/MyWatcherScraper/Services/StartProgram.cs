@@ -43,8 +43,7 @@ namespace MyWatcherScraper.Services
 
                 await _signalRSocket.Connect();
                 
-                await _requestListenerService.StartListening();
-                //await _scrapingService.ScrapeAllItemsOfService(serviceId);
+                //await _requestListenerService.StartListening();
             });
 
             return true;
