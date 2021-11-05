@@ -1,4 +1,4 @@
-﻿@page "/pricerunner"
+﻿@page "/firstHand"
 @using MyWatcher.Models
 @using MyWatcherFrontend.Services
 @using MyWatcher.Entities
@@ -12,7 +12,7 @@
 @implements IAsyncDisposable
 @inject ISnackbar _snackbar
 
-<h1>Pricerunner Items</h1>
+<h1>Stock Items</h1>
 <p>The following table shows all the items you track</p>
 <MudAlert Style="width: 20%; align-self: center" Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="@(() => _alertHidden=true)" hidden="@_alertHidden">@_alertMessage</MudAlert>
 <UserItemTable @ref=@_userItemTable 

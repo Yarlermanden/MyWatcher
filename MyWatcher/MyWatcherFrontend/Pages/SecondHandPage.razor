@@ -1,0 +1,22 @@
+@page "/secondHand"
+
+<h1>Second-hand items </h1>
+<p>The following columns show the items you track</p>
+@*Somehow show an overview of the items users track *@
+
+@*
+<MudAlert Style="width: 20%; align-self: center" Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="@(() => _alertHidden=true)" hidden="@_alertHidden">@_alertMessage</MudAlert>
+<UserItemTable @ref=@_userItemTable 
+               UserItemTableList=@_items 
+               OnDelete="@((userItem) => DeleteUserItem(userItem))" 
+               OnUpdate="@UpdateUserItem" 
+               OnAdd="@AddUserItem"
+               OnRefresh="@RefreshUserItems" 
+               OnForceRescan="@ForceRescan"
+/>
+<AddUserItemComponent @ref=@_addUserItemComponent/>
+*@
+
+@code {
+    
+}
