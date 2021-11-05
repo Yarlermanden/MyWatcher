@@ -24,12 +24,13 @@ namespace MyWatcherScraper
 
             var rc = HostFactory.Run(x =>
             {
-                x.Service<StartScrapingService>(sc =>
+                x.Service<StartProgram>(sc =>
                 {
                     var scrapingService = services.GetRequiredService<IScrapingService>();
                     var requestListenerService = services.GetRequiredService<IRequestListenerService>();
+                    var signalRSocket = services.GetRequiredService<ISignalRSocket>();
 
-                    sc.ConstructUsing(name => new StartScrapingService(scrapingService, requestListenerService));
+                    sc.ConstructUsing(name => new StartProgram(scrapingService, requestListenerService, signalRSocket));
                     sc.WhenStarted((service, control) => service.Start(control));
                     sc.WhenStopped((service, control) => service.Stop(control));
                 });
@@ -49,7 +50,9 @@ namespace MyWatcherScraper
             var serviceCollection = new ServiceCollection();
             IConfiguration configuration = SetupConfiguration();
 
+            //serviceCollection.AddScoped(sp => new HttpClient { BaseAddress = new Uri(serviceCollection.HostEnvironment.BaseAddress) });
             serviceCollection.AddSingleton(configuration);
+            serviceCollection.AddSingleton<ISignalRSocket, SignalRSocket>();
             serviceCollection.AddTransient<IScrapingService, ScrapingService>();
             serviceCollection.AddTransient<IExtractService, ExtractService>();
             serviceCollection.AddTransient<ICommunicationService, CommunicationService>();

@@ -77,9 +77,10 @@ namespace MyWatcherApi.Api
         [HttpPatch("forceRescan")]
         public async Task<IActionResult> ForceRescan([FromBody] ForceRescanRequest request)
         {
-            var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
-            Thread.Sleep(5000);
-            if (!success) { return new ConflictResult(); }
+            //var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
+            //var success = isServerOnline
+            await _serverHub.StartUserScraping(request);
+            //if (!success) { return new ConflictResult(); }
             return NoContent();
         }
     }

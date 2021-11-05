@@ -5,15 +5,18 @@ using Topshelf;
 
 namespace MyWatcherScraper.Services
 {
-    public class StartScrapingService : ServiceControl
+    public class StartProgram : ServiceControl
     {
         private IScrapingService _scrapingService;
         private IRequestListenerService _requestListenerService;
+        private readonly ISignalRSocket _signalRSocket;
 
-        public StartScrapingService(IScrapingService scrapingService, IRequestListenerService requestListenerService)
+        public StartProgram(IScrapingService scrapingService, IRequestListenerService requestListenerService,
+            ISignalRSocket signalRSocket)
         {
             _scrapingService = scrapingService;
             _requestListenerService = requestListenerService;
+            _signalRSocket = signalRSocket;
         }
 
         public bool Start(HostControl hostControl)
@@ -37,6 +40,9 @@ namespace MyWatcherScraper.Services
                     "https://www.pricerunner.dk/pl/1-5261396/Mobiltelefoner/Apple-iPhone-12-64GB-Sammenlign-Priser");
                 */
                 var serviceId = 1; //given by Api via websocket
+
+                await _signalRSocket.Connect();
+                
                 await _requestListenerService.StartListening();
                 //await _scrapingService.ScrapeAllItemsOfService(serviceId);
             });
