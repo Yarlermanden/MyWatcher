@@ -13,6 +13,7 @@ namespace MyWatcher.Services
     public interface IUserService
     {
         Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto);
+        Task<UserGetDTO?> LoginUser(UserLoginDTO dto);
     }
 
     public class UserService : IUserService
@@ -38,6 +39,20 @@ namespace MyWatcher.Services
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();
             
+            return await GetUserGetDtoFromUser(user);
+        }
+
+        public async Task<UserGetDTO?> LoginUser(UserLoginDTO dto)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
+            if (user == null) return null;
+
+            var hashedPassword = await GenerateHashedPassword(user.Salt, dto.Password);
+            if (hashedPassword != user.Password) return null;
+            
+            user.LastLogin = DateTimeOffset.Now;
+            await dbContext.SaveChangesAsync();
             return await GetUserGetDtoFromUser(user);
         }
 

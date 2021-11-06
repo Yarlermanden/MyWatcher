@@ -24,4 +24,12 @@ public class UserController
         if (user == null) return new ConflictResult();
         return new OkObjectResult(user);
     }
+
+    [HttpPost("loginUser")]
+    public async Task<IActionResult> LoginUser([FromBody] UserLoginDTO dto)
+    {
+        var user = await _userService.LoginUser(dto);
+        if (user == null) return new BadRequestResult();
+        return new OkObjectResult(user);
+    }
 }
