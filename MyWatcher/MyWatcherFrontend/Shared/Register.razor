@@ -1,6 +1,9 @@
 @page "/Register"
 @using System.ComponentModel.DataAnnotations
 @using System.Text.RegularExpressions
+@using MyWatcher.Models.User
+@using MyWatcherFrontend.Services
+@inject IApiService _apiService;
 
 
 <h3>Register</h3>
@@ -10,8 +13,8 @@
         <MudCardContent>
             <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors">
                 <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
-                              Validation="@(new Func<string, string>(ValidateEmail))"/>
-                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="_pwField1"
+                              Validation="@(new Func<string, string>(ValidateEmail))" @ref="_email"/>
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="_password"
                               InputType="InputType.Password"
                               Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                               RequiredError="Password is required!"/>
@@ -32,7 +35,8 @@
     bool _success;
     string[] _errors = { };
     string _error = "";
-    MudTextField<string> _pwField1;
+    MudTextField<string> _email;
+    MudTextField<string> _password;
     MudForm _form;
 
     private string ValidateEmail(string email)
@@ -64,25 +68,25 @@
     private string PasswordMatch(string arg)
     {
         _error = "";
-        if (_pwField1.Value != arg)
+        if (_password.Value != arg)
             return "Passwords don't match";
         return null;
     }
 
     private async Task RegisterNewUser()
     {
-        Console.WriteLine("Registering");
-        var (success, errorMessage) = (false, "A user with that email already exist");
-
-        if (success)
+        var dto = new UserRegisterDTO()
         {
-            //redirect to Home
-            _error = "";
-        }
+            Email = _email.Text,
+            Password = _password.Text
+        };
+        var user = await _apiService.RegisterUser(dto);
+        if (user == null) _error = "User with selected email already exist";
         else
         {
-            //show error
-            _error = errorMessage;
+            Console.WriteLine("Successfully registered user");
+            //set user in memcache
+            //redirect
         }
     }
 }

@@ -1,7 +1,9 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
 @using System.Text.RegularExpressions
-
+@using MyWatcher.Models.User
+@using MyWatcherFrontend.Services
+@inject IApiService _apiService;
 
 <h3>Login</h3>
 
@@ -10,8 +12,8 @@
         <MudCardContent>
             <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
                 <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
-                              Reguired="true"/>
-                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                              Reguired="true" @ref="_email"/>
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="_password"
                               InputType="InputType.Password"
                               Required="true"
                               RequiredError="Password is required!"/>
@@ -29,21 +31,24 @@
     bool success;
     string[] errors = { };
     string _error = "";
-    MudTextField<string> pwField1;
+    MudTextField<string> _email;
+    MudTextField<string> _password;
     MudForm form;
 
     private async Task LoginAsUser()
     {
-        Console.WriteLine("Login in");
-        var(success, errorMessage) = (false, "Wrong username or password");
-        if (success)
+        var dto = new UserLoginDTO()
         {
-            //redirect to Home
-            _error = "";
-        }
+            Email = _email.Value,
+            Password = _password.Value
+        };
+        var user = await _apiService.LoginUser(dto);
+        if (user == null) _error = "Wrong username or password";
         else
         {
-            _error = errorMessage;
+            Console.WriteLine("Successfully logged in");
+            //set user in memcache
+            //redirect
         }
     }
 }

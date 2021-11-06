@@ -6,4 +6,8 @@ public class UserGetDTO
     public string Email { get; set; }
     public string UserName { get; set; }
     //Cookie
+    public UserGetDTO()
+    {
+        
+    }
 }

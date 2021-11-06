@@ -141,7 +141,6 @@ namespace MyWatcherApi
                 {
                     var user = new User()
                     {
-                        Name = "Martin Holst",
                         UserName = "Yarl",
                         Password = "Hej123!"
                     };

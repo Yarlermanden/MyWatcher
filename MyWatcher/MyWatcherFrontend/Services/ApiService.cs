@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyWatcher.Models;
 using System.Text.Json;
 using MyWatcher.Entities;
+using MyWatcher.Models.User;
 using MyWatcher.Models.UserItem;
 using MyWatcher.Services;
 using Npgsql.Replication;
@@ -19,6 +20,8 @@ namespace MyWatcherFrontend.Services
         public Task<(bool, string)> DeleteUserItem(UserItemDeleteDTO dto);
         public Task<(bool, string)> UpdateUserItem(UserItemUpdateDTO dto);
         public Task<bool> ForceRescanUserItems(ForceRescanRequest request);
+        Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto);
+        Task<UserGetDTO?> LoginUser(UserLoginDTO dto);
     }
     
     public class ApiService : IApiService
@@ -110,6 +113,39 @@ namespace MyWatcherFrontend.Services
                 Console.WriteLine("Failed to force rescan");
                 return false;
             }
+        }
+
+        public async Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto)
+        {
+            var response = await _communicationService.PostItemRequest($"/api/user/registerUser", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Successfully registered user");
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<UserGetDTO>(content);
+            }
+            else
+            {
+                Console.WriteLine("Failed registering the user");
+                return null;
+            }
+        }
+
+        public async Task<UserGetDTO?> LoginUser(UserLoginDTO dto)
+        {
+            var response = await _communicationService.PostItemRequest($"/api/user/loginUser", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Successfully logged user in");
+                var content = await response.Content.ReadAsStreamAsync();
+                return JsonSerializer.Deserialize<UserGetDTO>(content);
+            }
+            else
+            {
+                Console.WriteLine("Failed to login user");
+                return null;
+            }
+
         }
     }
 }

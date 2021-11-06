@@ -30,7 +30,8 @@ namespace MyWatcher.Services
 
         public async Task<HttpResponseMessage> SendRequestToApi(string endpoint, object item, Method requestType)
         {
-            var baseUrl = "http://localhost:5000";
+            //var baseUrl = "http://localhost:5000";
+            var baseUrl = "https://localhost:5001";
             //Todo this baseUrl should use the one from the respective appsettings.json file
             switch (requestType)
             {

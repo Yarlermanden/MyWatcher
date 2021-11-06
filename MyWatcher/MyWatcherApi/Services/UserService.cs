@@ -19,9 +19,15 @@ namespace MyWatcher.Services
     public class UserService : IUserService
     {
         private readonly IDbContextFactory<DatabaseContext> _dbFactory;
+
+        public UserService(IDbContextFactory<DatabaseContext> dbFactory)
+        {
+            _dbFactory = dbFactory;
+        }
         
         public async Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto)
         {
+            dto.Email = dto.Email.ToLower();
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
             var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
             if (user != null) return null;
@@ -34,7 +40,7 @@ namespace MyWatcher.Services
                 Email = dto.Email,
                 Salt = salt,
                 Password = password,
-                LastLogin = DateTimeOffset.Now
+                LastLogin = DateTimeOffset.UtcNow
             };
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();
@@ -44,6 +50,7 @@ namespace MyWatcher.Services
 
         public async Task<UserGetDTO?> LoginUser(UserLoginDTO dto)
         {
+            dto.Email = dto.Email.ToLower();
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
             var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
             if (user == null) return null;
@@ -51,7 +58,7 @@ namespace MyWatcher.Services
             var hashedPassword = await GenerateHashedPassword(user.Salt, dto.Password);
             if (hashedPassword != user.Password) return null;
             
-            user.LastLogin = DateTimeOffset.Now;
+            user.LastLogin = DateTimeOffset.UtcNow;
             await dbContext.SaveChangesAsync();
             return await GetUserGetDtoFromUser(user);
         }
