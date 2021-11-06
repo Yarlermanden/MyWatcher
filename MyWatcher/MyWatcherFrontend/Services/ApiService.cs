@@ -122,7 +122,7 @@ namespace MyWatcherFrontend.Services
             {
                 Console.WriteLine("Successfully registered user");
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<UserGetDTO>(content);
+                return JsonSerializer.Deserialize<UserGetDTO>(content, _options);
             }
             else
             {
@@ -137,8 +137,8 @@ namespace MyWatcherFrontend.Services
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully logged user in");
-                var content = await response.Content.ReadAsStreamAsync();
-                return JsonSerializer.Deserialize<UserGetDTO>(content);
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<UserGetDTO>(content, _options);
             }
             else
             {

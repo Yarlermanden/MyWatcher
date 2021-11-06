@@ -29,9 +29,15 @@ namespace MyWatcher.Services
         private readonly RefreshTokenGenerator _refreshTokenGenerator;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public UserService(IDbContextFactory<DatabaseContext> dbFactory)
+        public UserService(IDbContextFactory<DatabaseContext> dbFactory,
+            AccessTokenGenerator accessTokenGenerator,
+            RefreshTokenGenerator refreshTokenGenerator,
+            IRefreshTokenRepository refreshTokenRepository)
         {
             _dbFactory = dbFactory;
+            _accessTokenGenerator = accessTokenGenerator;
+            _refreshTokenGenerator = refreshTokenGenerator;
+            _refreshTokenRepository = refreshTokenRepository;
         }
         
         public async Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto)
@@ -69,7 +75,8 @@ namespace MyWatcher.Services
             
             user.LastLogin = DateTimeOffset.UtcNow;
             await dbContext.SaveChangesAsync();
-            return await GetUserGetDtoFromUser(user);
+            //return await GetUserGetDtoFromUser(user);
+            return await Authenticate(user);
         }
 
         /*

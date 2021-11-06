@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
@@ -9,14 +10,17 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Bot.Connector.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyWatcher.Entities;
+using MyWatcher.Models;
 using MyWatcherApi.Hubs;
 using MyWatcher.Services;
+using MyWatcher.Services.RefreshTokenRepositories;
+using MyWatcher.Services.TokenGenerators;
+using MyWatcher.Services.TokenValidators;
 using MyWatcherApi.Api;
 
 namespace MyWatcherApi
@@ -45,7 +49,6 @@ namespace MyWatcherApi
             {
                 //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MyWatcherApi"));
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                //Run migrations with dotnet ef --startup-project ../MyWatcherApi migrations add Initial
             });
             services.AddScoped(p =>
                 p.GetRequiredService<IDbContextFactory<DatabaseContext>>()
@@ -58,11 +61,6 @@ namespace MyWatcherApi
                     .AllowAnyHeader()
                     .AllowAnyMethod());
             });
-
-            services.AddDbContext<DatabaseContext>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-            });
             
             services.AddHttpClient();
             services.AddHttpContextAccessor();
@@ -71,9 +69,9 @@ namespace MyWatcherApi
             {
                 o.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecret)),
-                    //ValidIssuer = authenticationConfiguration.Issuer,
-                    //ValidAudience = authenticationConfiguration.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecret)),
+                    ValidIssuer = authenticationConfiguration.Issuer,
+                    ValidAudience = authenticationConfiguration.Audience,
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -87,9 +85,7 @@ namespace MyWatcherApi
             }).AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
-            });
-                //.AddMessagePackProtocol();
-            //services.AddSignalR();
+            }).AddMessagePackProtocol();
 
             services.AddRazorPages();
             services.AddResponseCompression(opts =>
@@ -97,12 +93,19 @@ namespace MyWatcherApi
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+            
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
             services.AddSingleton<ServerHub>();
             services.AddSingleton<ClientHub>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IUserItemService, UserItemService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddSingleton<RefreshTokenGenerator>();
+            services.AddSingleton<RefreshTokenValidator>();
+            services.AddSingleton<TokenGenerator>();
+            services.AddSingleton<AccessTokenGenerator>();
+            services.AddScoped<IRefreshTokenRepository, DatabaseRefreshTokenRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
@@ -112,6 +115,7 @@ namespace MyWatcherApi
             app.UseStaticFiles();
             app.UseResponseCompression();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseAuthorization();
             app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
