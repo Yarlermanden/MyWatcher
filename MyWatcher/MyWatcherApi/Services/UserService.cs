@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using MyWatcher.Entities;
 using MyWatcher.Models;
 using MyWatcher.Models.User;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MyWatcher.Services.RefreshTokenRepositories;
+using MyWatcher.Services.TokenGenerators;
 
 namespace MyWatcher.Services
 {
@@ -14,11 +18,16 @@ namespace MyWatcher.Services
     {
         Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto);
         Task<UserGetDTO?> LoginUser(UserLoginDTO dto);
+        //Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress);
+        Task<UserGetDTO> Authenticate(User account);
     }
 
     public class UserService : IUserService
     {
         private readonly IDbContextFactory<DatabaseContext> _dbFactory;
+        private readonly AccessTokenGenerator _accessTokenGenerator;
+        private readonly RefreshTokenGenerator _refreshTokenGenerator;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
         public UserService(IDbContextFactory<DatabaseContext> dbFactory)
         {
@@ -61,6 +70,32 @@ namespace MyWatcher.Services
             user.LastLogin = DateTimeOffset.UtcNow;
             await dbContext.SaveChangesAsync();
             return await GetUserGetDtoFromUser(user);
+        }
+
+        /*
+        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
+        {
+            
+        }
+        */
+
+        public async Task<UserGetDTO> Authenticate(User account)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            string accessToken = _accessTokenGenerator.GenerateToken(account);
+            string refreshToken = _refreshTokenGenerator.GenerateToken();
+
+            RefreshToken refreshTokenDTO = new RefreshToken()
+            {
+                Token = refreshToken,
+                UserId = account.Id
+            };
+            await _refreshTokenRepository.Create(refreshTokenDTO);
+
+            var response = await GetUserGetDtoFromUser(account);
+            response.AccessToken = accessToken;
+            response.RefreshToken = refreshToken;
+            return response;
         }
 
         private async Task<UserGetDTO> GetUserGetDtoFromUser(User user)
