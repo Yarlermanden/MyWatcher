@@ -1,0 +1,33 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+
+
+<h3>Login</h3>
+
+<div style="max-width: 400px;">
+    <MudCard>
+        <MudCardContent>
+            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                              Reguired="true"/>
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                              InputType="InputType.Password"
+                              Required="true"
+                              RequiredError="Password is required!"/>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>
+
+
+@code {
+    bool success;
+    string[] errors = { };
+    MudTextField<string> pwField1;
+    MudForm form;
+    
+}

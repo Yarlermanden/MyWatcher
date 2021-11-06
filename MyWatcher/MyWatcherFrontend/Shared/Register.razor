@@ -1,0 +1,88 @@
+@page "/Register"
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+
+
+<h3>Register</h3>
+
+<div style="max-width: 400px;">
+    <MudCard>
+        <MudCardContent>
+            <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors">
+                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                              Validation="@(new Func<string, string>(ValidateEmail))"/>
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="_pwField1"
+                              InputType="InputType.Password"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              RequiredError="Password is required!"/>
+                <MudTextField T="string"
+                              Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                              Validation="@(new Func<string, string>(PasswordMatch))"/>
+            </MudForm>
+            <MudText Class="pa-4 mud-secondary-text">@_error</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_success)" Class="ml-auto" OnClick="RegisterNewUser">Register</MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>
+
+
+@code {
+    bool _success;
+    string[] _errors = { };
+    string _error = "";
+    MudTextField<string> _pwField1;
+    MudForm _form;
+
+    private string ValidateEmail(string email)
+    {
+        _error = "";
+        var eaa = new EmailAddressAttribute().IsValid(email);
+        if (eaa) return null;
+        return "The email address is invalid";
+    }
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        _error = "";
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        _error = "";
+        if (_pwField1.Value != arg)
+            return "Passwords don't match";
+        return null;
+    }
+
+    private async Task RegisterNewUser()
+    {
+        Console.WriteLine("Registering");
+        var (success, errorMessage) = (false, "A user with that email already exist");
+
+        if (success)
+        {
+            //redirect to Home
+            _error = "";
+        }
+        else
+        {
+            //show error
+            _error = errorMessage;
+        }
+    }
+}
