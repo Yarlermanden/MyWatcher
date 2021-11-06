@@ -1,0 +1,62 @@
+﻿@page "/"
+
+<h1>Welcome the Watcher </h1>
+<h2>Your personal second pair of eyes</h2>
+
+<p>This site is made for keeping track on everything for you. </p>
+
+<ul>
+    <li>Go check out all the services</li>
+    <li>Add items of interest</li>
+    <li>Monitor the daily updates</li>
+    <li>Keep track of your items</li>
+    <li>Receive notifications</li>
+    <li>Add third party communication channels</li>
+</ul>
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+@* Make items selectable with links to the other pages *@ 
+<MudGrid Spacing="6" Justify="Justify.Center">
+    <MudItem>
+        <MudCard>
+            <NavLink class="nav-link" href="firstHand">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Stock Items </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Keep track of your most wanted items</MudText>
+                    <MudText Typo="Typo.body2">Get notified about sales/drop in price</MudText>
+                    <MudText Typo="Typo.body2"><br/> </MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Take me there</MudButton>
+                </MudCardActions>
+            </NavLink>
+        </MudCard>
+    </MudItem>
+    <MudItem>
+        <MudCard>
+            <NavLink class="nav-link" href="secondHand">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Second Hand Items </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Keep track of good deals</MudText>
+                    <MudText Typo="Typo.body2">Select price, condition and location boundaries</MudText>
+                    <MudText Typo="Typo.body2">Get notified according to your preferences</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Take me there</MudButton>
+                </MudCardActions>
+            </NavLink>
+        </MudCard>
+    </MudItem>
+</MudGrid>
