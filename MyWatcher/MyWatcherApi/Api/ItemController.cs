@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcher.Entities;
 using MyWatcher.Models;
+using MyWatcher.Models.Item;
 using MyWatcher.Services;
 using MyWatcherApi.Hubs;
 

@@ -1,6 +1,6 @@
 using MyWatcher.Entities;
 
-namespace MyWatcher.Models
+namespace MyWatcher.Models.Item
 {
     public class ItemGetDTO
     {
@@ -11,7 +11,7 @@ namespace MyWatcher.Models
         {
             
         }
-        public ItemGetDTO(Item i)
+        public ItemGetDTO(Entities.Item i)
         {
             Id = i.Id;
             URL = i.URL;

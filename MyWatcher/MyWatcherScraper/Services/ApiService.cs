@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MyWatcher.Models;
 using MyWatcher.Services;
 using System.Text.Json;
+using MyWatcher.Models.Item;
 
 namespace MyWatcherScraper.Services
 {

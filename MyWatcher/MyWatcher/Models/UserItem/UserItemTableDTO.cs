@@ -1,6 +1,6 @@
 using System;
 
-namespace MyWatcher.Models
+namespace MyWatcher.Models.UserItem
 {
     public class UserItemTableDTO
     {

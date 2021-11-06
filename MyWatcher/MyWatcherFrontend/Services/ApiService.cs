@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyWatcher.Models;
 using System.Text.Json;
 using MyWatcher.Entities;
+using MyWatcher.Models.UserItem;
 using MyWatcher.Services;
 using Npgsql.Replication;
 

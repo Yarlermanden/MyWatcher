@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyWatcher.Entities;
 using MyWatcher.Models;
+using MyWatcher.Models.Item;
 
 namespace MyWatcher.Services
 {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcherApi.Hubs;
 using MyWatcher.Models;
+using MyWatcher.Models.UserItem;
 using MyWatcher.Services;
 using Serilog;
 

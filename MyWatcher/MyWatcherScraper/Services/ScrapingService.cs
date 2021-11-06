@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MyWatcher.Models;
+using MyWatcher.Models.Item;
 
 namespace MyWatcherScraper.Services
 {

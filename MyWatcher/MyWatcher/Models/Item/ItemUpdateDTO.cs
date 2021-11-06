@@ -1,4 +1,4 @@
-namespace MyWatcher.Models
+namespace MyWatcher.Models.Item
 {
     public class ItemUpdateDTO
     {
