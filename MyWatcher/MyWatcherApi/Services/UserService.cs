@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyWatcher.Entities;
@@ -22,12 +24,9 @@ namespace MyWatcher.Services
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
             var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
             if (user != null) return null;
-            
-            
-            //Generate a new salt
-            var salt = "";
-            //Generate password from salt
-            var password = "";
+
+            var salt = await GenerateSalt(32);
+            var password = await GenerateHashedPassword(salt, dto.Password);
             user = new User()
             {
                 UserName = dto.UserName,
@@ -50,6 +49,32 @@ namespace MyWatcher.Services
                 Email = user.Email,
                 UserName = user.UserName
             };
+        }
+
+        private async Task<string> GenerateSalt(int size)
+        {
+            //Generate a cryptographic random number.
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] buff = new byte[size];
+            rng.GetBytes(buff);
+
+            // Return a Base64 string representation of the random number.
+            return Convert.ToBase64String(buff);
+        }
+
+        private async Task<string> GenerateHashedPassword(string salt, string plainPassword)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+            var passBytes = Encoding.ASCII.GetBytes(plainPassword);
+            HashAlgorithm algorithm = new SHA256Managed();
+
+            byte[] combined = new byte[saltBytes.Length + passBytes.Length];
+
+            for (int i = 0; i < passBytes.Length; i++) combined[i] = passBytes[i];
+            for (int i = 0; i < saltBytes.Length; i++) combined[i + passBytes.Length] = saltBytes[i];
+
+            var hashed = algorithm.ComputeHash(combined);
+            return Convert.ToBase64String(hashed);
         }
     }
 }
