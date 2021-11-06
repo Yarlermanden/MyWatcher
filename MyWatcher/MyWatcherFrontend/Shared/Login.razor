@@ -16,9 +16,10 @@
                               Required="true"
                               RequiredError="Password is required!"/>
             </MudForm>
+            <MudText Class="pa-4 mud-secondary-text">@_error</MudText>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" OnClick="LoginAsUser">Register</MudButton>
         </MudCardActions>
     </MudCard>
 </div>
@@ -27,7 +28,22 @@
 @code {
     bool success;
     string[] errors = { };
+    string _error = "";
     MudTextField<string> pwField1;
     MudForm form;
-    
+
+    private async Task LoginAsUser()
+    {
+        Console.WriteLine("Login in");
+        var(success, errorMessage) = (false, "Wrong username or password");
+        if (success)
+        {
+            //redirect to Home
+            _error = "";
+        }
+        else
+        {
+            _error = errorMessage;
+        }
+    }
 }
