@@ -6,7 +6,7 @@ namespace MyWatcher.Entities
 {
     public class Item
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public double PriceLastWeek { get; set; }
@@ -17,8 +17,7 @@ namespace MyWatcher.Entities
         public bool Active { get; set; }
         public DateTime? LastScan { get; set; }
         
-        [ForeignKey("Service")]
-        public Service Service { get; set; }
+        public virtual Service Service { get; set; }
 
         public Item(){}
         public Item(string url, Service service)

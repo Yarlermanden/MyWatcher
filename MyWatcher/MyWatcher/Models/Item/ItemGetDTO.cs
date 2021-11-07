@@ -1,10 +1,11 @@
+using System;
 using MyWatcher.Entities;
 
 namespace MyWatcher.Models.Item
 {
     public class ItemGetDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string URL { get; set; }
 
         public ItemGetDTO()

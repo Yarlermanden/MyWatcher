@@ -31,13 +31,13 @@ namespace MyWatcherApi.Api
         }
 
         [HttpGet("getAllFromUser")]
-        public async Task<List<ItemGetDTO>> GetAllItemsFromUser(Service service, int userId)
+        public async Task<List<ItemGetDTO>> GetAllItemsFromUser(Service service, Guid userId)
         {
             return await _itemService.GetAllItemsOfServiceFromUser(service, userId);
         }
 
         [HttpGet("getFromUserNotRecentlyUpdated/{serviceId}/{userId}")]
-        public async Task<List<ItemGetDTO>> GetItemsFromUserNotRecentlyUpdated(Service service, int userId)
+        public async Task<List<ItemGetDTO>> GetItemsFromUserNotRecentlyUpdated(Service service, Guid userId)
         {
             return await _itemService.GetAllItemsOfServiceFromUserNotUpdatedLastHour(service, userId);
         }

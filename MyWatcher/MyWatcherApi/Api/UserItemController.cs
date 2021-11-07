@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace MyWatcherApi.Api
 
         [EnableCors]
         [HttpGet("getStock/{userId}")]
-        public async Task<List<UserItemTableDTO>> GetUserItems(int userId)
+        public async Task<List<UserItemTableDTO>> GetUserItems(Guid userId)
         {
             return await _userItemService.GetUsersItemsFromService(userId, Service.Stock);
         }
@@ -49,7 +50,7 @@ namespace MyWatcherApi.Api
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
             var id = await _userItemService.AddUserItem(dto);
-            if (id == -1)
+            if (id == null)
             {
                 return new ConflictResult();
             }

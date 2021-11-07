@@ -15,7 +15,7 @@ namespace MyWatcherScraper.Services
         public Task<List<ItemGetDTO>> GetAllItems(Service service);
         public Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(ForceRescanRequest forceRescanRequest);
         public Task UpdateItem(ItemUpdateDTO dto);
-        public Task SendScrapingComplete(int? userId, Service service);
+        public Task SendScrapingComplete(Guid? userId, Service service);
     }
     
     public class ApiService : IApiService
@@ -71,7 +71,7 @@ namespace MyWatcherScraper.Services
             }
         }
 
-        public async Task SendScrapingComplete(int? userId, Service service)
+        public async Task SendScrapingComplete(Guid? userId, Service service)
         {
             ScrapingCompleteDTO dto = new ScrapingCompleteDTO() {UserId = userId, Service = service};
             var response = await _communicationService.PostItemRequest($"/api/item/scrapingCompleted", dto);
