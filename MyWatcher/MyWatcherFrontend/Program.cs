@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using MudBlazor;
 using MudBlazor.Services;
+using MyWatcher.Entities;
 using MyWatcher.Services;
 using MyWatcherFrontend;
 using MyWatcherFrontend.Services;
@@ -34,6 +36,9 @@ namespace MyWatcherFrontend
             });
             builder.Services.AddSingleton<ICommunicationService, CommunicationService>();
             builder.Services.AddSingleton<IApiService, ApiService>();
+            
+            builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>
+                >();
 
             await builder.Build().RunAsync();
         }

@@ -1,9 +1,15 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
 @using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using MyWatcher.Entities
 @using MyWatcher.Models.User
 @using MyWatcherFrontend.Services
 @inject IApiService _apiService;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager _navigationManager
+@inject UserManager<User> _userManager
 
 <h3>Login</h3>
 
@@ -34,6 +40,15 @@
     MudTextField<string> _email;
     MudTextField<string> _password;
     MudForm form;
+    
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = await _userManager.GetUserAsync(authState.User);
+    }
 
     private async Task LoginAsUser()
     {
@@ -46,8 +61,11 @@
         if (user == null) _error = "Wrong username or password";
         else
         {
+            _navigationManager.NavigateTo("/");
             //set user in memcache
             //redirect
+            //Response.Cookies.Append("MyCookie", "value1");
+            
         }
     }
 }

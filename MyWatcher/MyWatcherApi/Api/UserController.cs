@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcher.Models;
 using MyWatcher.Models.User;
@@ -33,6 +34,7 @@ public class UserController : ControllerBase
         Console.WriteLine("Login user in");
         var user = await _userService.LoginUser(dto);
         if (user == null) return new BadRequestResult();
+        HttpContext.SignInAsync(user.AccessToken)
         return new OkObjectResult(user);
     }
 }

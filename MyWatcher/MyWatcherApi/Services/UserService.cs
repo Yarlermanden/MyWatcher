@@ -8,6 +8,7 @@ using MyWatcher.Entities;
 using MyWatcher.Models;
 using MyWatcher.Models.User;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using MyWatcher.Services.RefreshTokenRepositories;
 using MyWatcher.Services.TokenGenerators;
