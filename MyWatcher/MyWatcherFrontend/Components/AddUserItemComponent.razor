@@ -1,5 +1,6 @@
 @using MyWatcher.Models
 @using MudBlazor
+@using MyWatcher.Models.Enums
 @using MyWatcher.Models.UserItem
 
 <MudDialog Style="width: 40%">
@@ -37,7 +38,7 @@
         }
         else
         {
-            var userItemDto = new UserItemAddDTO(_itemUrl, _itemName, 1);
+            var userItemDto = new UserItemAddDTO(_itemUrl, _itemName, Service.Stock);
             MudDialog.Close(DialogResult.Ok(userItemDto));
         }
     }

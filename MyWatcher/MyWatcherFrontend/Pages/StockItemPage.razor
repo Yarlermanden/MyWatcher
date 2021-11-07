@@ -7,6 +7,7 @@
 @inject HttpClient Http
 @inject IApiService _apiService
 @using MudBlazor
+@using MyWatcher.Models.Enums
 @using MyWatcher.Models.UserItem
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
@@ -169,7 +170,7 @@
         Console.WriteLine("Force rescan");
         var request = new ForceRescanRequest()
         {
-            ServiceId = 1,
+            Service = Service.Stock,
             UserId = _user.Id
         };
         var success = await _apiService.ForceRescanUserItems(request);

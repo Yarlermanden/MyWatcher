@@ -1,3 +1,5 @@
+using MyWatcher.Models.Enums;
+
 namespace MyWatcher.Models;
 
 public class ScrapingCompleteDTO
@@ -5,5 +7,5 @@ public class ScrapingCompleteDTO
     //Type of service
     
     public int? UserId { get; set; }
-    public int ServiceId { get; set; }
+    public Service Service { get; set; }
 }

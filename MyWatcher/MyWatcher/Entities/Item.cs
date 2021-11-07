@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyWatcher.Models.Enums;
 
 namespace MyWatcher.Entities
 {
@@ -17,14 +18,13 @@ namespace MyWatcher.Entities
         public DateTime? LastScan { get; set; }
         
         [ForeignKey("Service")]
-        public int ServiceId { get; set; }
         public Service Service { get; set; }
 
         public Item(){}
-        public Item(string url, int serviceId)
+        public Item(string url, Service service)
         {
             URL = url;
-            ServiceId = serviceId;
+            Service = service;
             Active = true;
             Name = "";
             LastWeeklyPriceUpdate = DateTime.UtcNow;

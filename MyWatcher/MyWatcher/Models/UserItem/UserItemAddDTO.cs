@@ -1,9 +1,11 @@
+using MyWatcher.Models.Enums;
+
 namespace MyWatcher.Models.UserItem
 {
     public class UserItemAddDTO
     {
         public int UserId {get; set; }
-        public int ServiceId { get; set; }
+        public Service Service { get; set; }
         public string URL { get; set; }
         public string Name { get; set; }
 
@@ -12,11 +14,11 @@ namespace MyWatcher.Models.UserItem
             
         }
 
-        public UserItemAddDTO(string url, string name, int serviceId)
+        public UserItemAddDTO(string url, string name, Service service)
         {
             URL = url;
             Name = name;
-            ServiceId = serviceId;
+            Service = service;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MyWatcher.Models;
+using MyWatcher.Models.Enums;
 using MyWatcher.Models.Item;
 
 namespace MyWatcherScraper.Services
@@ -14,7 +15,7 @@ namespace MyWatcherScraper.Services
         //Find urls for items
         
         //Find price from urls
-        public Task ScrapeAllItemsOfService(int serviceId);
+        public Task ScrapeAllItemsOfService(Service service);
         public Task ForceScrapeAllItemsOfService(ForceRescanRequest request);
         public Task<double> ScrapePrice(string url);
     }
@@ -31,18 +32,18 @@ namespace MyWatcherScraper.Services
             _apiService = apiService;
         }
 
-        public async Task ScrapeAllItemsOfService(int serviceId)
+        public async Task ScrapeAllItemsOfService(Service service)
         {
-            var items = await _apiService.GetAllItems(serviceId);
+            var items = await _apiService.GetAllItems(service);
             await ScrapeAllItems(items);
-            await _apiService.SendScrapingComplete(null, serviceId);
+            await _apiService.SendScrapingComplete(null, service);
         }
 
         public async Task ForceScrapeAllItemsOfService(ForceRescanRequest request)
         {
             var items = await _apiService.GetAllItemsFromUserAndServiceNotRecentlyScanned(request);
             await ScrapeAllItems(items);
-            await _apiService.SendScrapingComplete(request.UserId, request.ServiceId);
+            await _apiService.SendScrapingComplete(request.UserId, request.Service);
         }
 
         public async Task ScrapeAllItems(List<ItemGetDTO> items)

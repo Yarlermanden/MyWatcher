@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MyWatcherApi.Hubs;
 using MyWatcher.Models;
+using MyWatcher.Models.Enums;
 using MyWatcher.Models.UserItem;
 using MyWatcher.Services;
 using Serilog;
@@ -38,10 +39,10 @@ namespace MyWatcherApi.Api
         }
 
         [EnableCors]
-        [HttpGet("getpricerunner/{userId}")]
+        [HttpGet("getStock/{userId}")]
         public async Task<List<UserItemTableDTO>> GetUserItems(int userId)
         {
-            return await _userItemService.GetUsersItemsFromService(userId, 1);
+            return await _userItemService.GetUsersItemsFromService(userId, Service.Stock);
         }
 
         [HttpPost("add")]

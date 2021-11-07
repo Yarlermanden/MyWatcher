@@ -39,7 +39,7 @@ namespace MyWatcherFrontend.Services
         public async Task<List<UserItemTableDTO>> GetUserItems(User user)
         {
             var userId = user.Id;
-            var response = await _communicationService.SendGetRequest($"/api/useritem/getpricerunner/{userId}", "");
+            var response = await _communicationService.SendGetRequest($"/api/useritem/getStock/{userId}", "");
             if (response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();

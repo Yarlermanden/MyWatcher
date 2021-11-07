@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyWatcher.Entities;
 using MyWatcher.Models;
+using MyWatcher.Models.Enums;
 using MyWatcher.Models.UserItem;
 
 namespace MyWatcher.Services
@@ -14,7 +15,7 @@ namespace MyWatcher.Services
         public Task<int> AddUserItem(UserItemAddDTO dto);
         public Task<int> AddUserItem(int userId, int itemId, string name);
         public Task<UserItem?> GetUserItem(int userId, int itemId);
-        public Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, int serviceId);
+        public Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, Service service);
         public Task<bool> DeleteUserItem(UserItemDeleteDTO dto);
         public Task<bool> UpdateUserItem(UserItemUpdateDTO dto);
     }
@@ -33,10 +34,10 @@ namespace MyWatcher.Services
 
         public async Task<int> AddUserItem(UserItemAddDTO dto)
         {
-            var item = await _itemService.GetItemFromUrlAndServiceId(dto.URL, dto.ServiceId);
+            var item = await _itemService.GetItemFromUrlAndServiceId(dto.URL, dto.Service);
             if (item == null)
             {
-                var id = await _itemService.AddItem(dto.URL, dto.ServiceId);
+                var id = await _itemService.AddItem(dto.URL, dto.Service);
                 item = await _itemService.GetItem(id);
             }
 
@@ -65,11 +66,11 @@ namespace MyWatcher.Services
             return userItem;
         }
 
-        public async Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, int serviceId)
+        public async Task<List<UserItemTableDTO>> GetUsersItemsFromService(int userId, Service service)
         {
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
             return await dbContext.UserItems.Include(ui => ui.Item)
-                .Where(ui => ui.UserId == userId && ui.Item.ServiceId == serviceId)
+                .Where(ui => ui.UserId == userId && ui.Item.Service == service)
                 .Select(ui => new UserItemTableDTO()
                 {
                     Id = ui.Id,

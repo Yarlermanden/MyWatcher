@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 using MyWatcher.Models;
 using MyWatcher.Services;
 using System.Text.Json;
+using MyWatcher.Models.Enums;
 using MyWatcher.Models.Item;
 
 namespace MyWatcherScraper.Services
 {
     public interface IApiService
     {
-        public Task<List<ItemGetDTO>> GetAllItems(int serviceId);
+        public Task<List<ItemGetDTO>> GetAllItems(Service service);
         public Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(ForceRescanRequest forceRescanRequest);
         public Task UpdateItem(ItemUpdateDTO dto);
-        public Task SendScrapingComplete(int? userId, int serviceId);
+        public Task SendScrapingComplete(int? userId, Service service);
     }
     
     public class ApiService : IApiService
@@ -28,9 +29,9 @@ namespace MyWatcherScraper.Services
             _options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<List<ItemGetDTO>> GetAllItems(int serviceId)
+        public async Task<List<ItemGetDTO>> GetAllItems(Service service)
         {
-            var response = await _communicationService.SendGetRequest($"/api/item/getAll/{serviceId}", "");
+            var response = await _communicationService.SendGetRequest($"/api/item/getAll/{service}", "");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully retrieved all items");
@@ -45,7 +46,7 @@ namespace MyWatcherScraper.Services
         public async Task<List<ItemGetDTO>> GetAllItemsFromUserAndServiceNotRecentlyScanned(
             ForceRescanRequest forceRescanRequest)
         {
-            var response = await _communicationService.SendGetRequest($"/api/item/getFromUserNotRecentlyUpdated/{forceRescanRequest.ServiceId}/{forceRescanRequest.UserId}", "");
+            var response = await _communicationService.SendGetRequest($"/api/item/getFromUserNotRecentlyUpdated/{forceRescanRequest.Service}/{forceRescanRequest.UserId}", "");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully retrieved all items");
@@ -70,9 +71,9 @@ namespace MyWatcherScraper.Services
             }
         }
 
-        public async Task SendScrapingComplete(int? userId, int serviceId)
+        public async Task SendScrapingComplete(int? userId, Service service)
         {
-            ScrapingCompleteDTO dto = new ScrapingCompleteDTO() {UserId = userId, ServiceId = serviceId};
+            ScrapingCompleteDTO dto = new ScrapingCompleteDTO() {UserId = userId, Service = service};
             var response = await _communicationService.PostItemRequest($"/api/item/scrapingCompleted", dto);
             if (response.IsSuccessStatusCode) Console.WriteLine("Successfully completed scraping");
             else Console.WriteLine("Failed completing scraping");

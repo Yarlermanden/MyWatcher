@@ -145,13 +145,7 @@ namespace MyWatcherApi
                         Password = "Hej123!"
                     };
 
-                    var service = new Service()
-                    {
-                        Name = "PriceRunner"
-                    };
-
                     dbContext.Users.Add(user);
-                    dbContext.Services.Add(service);
                     dbContext.SaveChanges();
                 }
             }
