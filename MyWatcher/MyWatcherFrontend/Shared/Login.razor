@@ -4,6 +4,7 @@
 @using MyWatcher.Models.User
 @using MyWatcherFrontend.Services
 @inject IApiService _apiService;
+@inject NavigationManager _navigationManager
 
 <h3>Login</h3>
 
@@ -48,7 +49,7 @@
         {
             Console.WriteLine("Successfully logged in");
             //set user in memcache
-            //redirect
+            _navigationManager.NavigateTo("/");
         }
     }
 }
