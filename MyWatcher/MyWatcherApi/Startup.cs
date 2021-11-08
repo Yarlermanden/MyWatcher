@@ -94,6 +94,8 @@ namespace MyWatcherApi
             services.AddTransient<IStockItemService, StockItemService>();
             services.AddTransient<IUserStockItemService, UserStockItemService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IWebsiteService, WebsiteService>();
+            services.AddTransient<ICountryService, CountryService>();
         }
 
         public void Configure(IApplicationBuilder app, DatabaseContext dbContext, IUserService userService)

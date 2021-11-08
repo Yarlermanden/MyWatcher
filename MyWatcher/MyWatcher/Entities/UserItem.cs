@@ -15,11 +15,13 @@ namespace MyWatcher.Entities
         public Guid UserId { get; set; }
         public User User { get; set; }
         
-        /*
-        [ForeignKey("Item")]
-        public int ItemId { get; set; }
-        public virtual Item Item { get; set; }
-        */
+        [ForeignKey("Country")]
+        public Guid? CountryId { get; set; }
+        public Country? Country { get; set; }
+        
+        [ForeignKey("Continent")]
+        public Guid? ContinentId { get; set; }
+        public Continent? Continent { get; set; }
 
         public UserItem(){}
         //public UserItem(int userId, int itemId, string name)

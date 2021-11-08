@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyWatcherApi.Migrations
 {
-    public partial class reworked_most_of_db : Migration
+    public partial class added_country_and_continent_to_useritem : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,11 +108,23 @@ namespace MyWatcherApi.Migrations
                     Active = table.Column<bool>(type: "boolean", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ContinentId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserSecondHandItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSecondHandItem_Continent_ContinentId",
+                        column: x => x.ContinentId,
+                        principalTable: "Continent",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserSecondHandItem_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserSecondHandItem_SecondHandItem_SecondHandItemId",
                         column: x => x.SecondHandItemId,
@@ -136,11 +148,23 @@ namespace MyWatcherApi.Migrations
                     Active = table.Column<bool>(type: "boolean", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ContinentId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserStockItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStockItem_Continent_ContinentId",
+                        column: x => x.ContinentId,
+                        principalTable: "Continent",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserStockItem_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserStockItem_StockItem_StockItemId",
                         column: x => x.StockItemId,
@@ -235,6 +259,16 @@ namespace MyWatcherApi.Migrations
                 column: "ContinentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserSecondHandItem_ContinentId",
+                table: "UserSecondHandItem",
+                column: "ContinentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSecondHandItem_CountryId",
+                table: "UserSecondHandItem",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserSecondHandItem_SecondHandItemId",
                 table: "UserSecondHandItem",
                 column: "SecondHandItemId");
@@ -243,6 +277,16 @@ namespace MyWatcherApi.Migrations
                 name: "IX_UserSecondHandItem_UserId",
                 table: "UserSecondHandItem",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStockItem_ContinentId",
+                table: "UserStockItem",
+                column: "ContinentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStockItem_CountryId",
+                table: "UserStockItem",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserStockItem_StockItemId",

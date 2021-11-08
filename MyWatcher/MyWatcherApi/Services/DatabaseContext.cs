@@ -57,6 +57,7 @@ namespace MyWatcher.Services
             userStockItems.Property(ui => ui.Id).HasColumnName("Id").ValueGeneratedOnAdd();
             userStockItems.HasOne(ui => ui.StockItem);
             userStockItems.HasOne(ui => ui.User);
+            //userStockItems.HasOne(ui => ui.Country);
             
             userSecondHandItems.HasKey(ui => ui.Id);
             userSecondHandItems.Property(ui => ui.Id).HasColumnName("Id").ValueGeneratedOnAdd();

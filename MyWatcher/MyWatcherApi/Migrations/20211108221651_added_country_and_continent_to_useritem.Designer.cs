@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyWatcherApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211108173258_reworked_most_of_db")]
-    partial class reworked_most_of_db
+    [Migration("20211108221651_added_country_and_continent_to_useritem")]
+    partial class added_country_and_continent_to_useritem
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -193,6 +193,12 @@ namespace MyWatcherApi.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("ContinentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -207,6 +213,10 @@ namespace MyWatcherApi.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContinentId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("SecondHandItemId");
 
@@ -225,6 +235,12 @@ namespace MyWatcherApi.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("ContinentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -239,6 +255,10 @@ namespace MyWatcherApi.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContinentId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("StockItemId");
 
@@ -347,6 +367,14 @@ namespace MyWatcherApi.Migrations
 
             modelBuilder.Entity("MyWatcher.Entities.UserSecondHandItem", b =>
                 {
+                    b.HasOne("MyWatcher.Entities.Continent", "Continent")
+                        .WithMany()
+                        .HasForeignKey("ContinentId");
+
+                    b.HasOne("MyWatcher.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("MyWatcher.Entities.SecondHandItem", "SecondHandItem")
                         .WithMany()
                         .HasForeignKey("SecondHandItemId")
@@ -359,6 +387,10 @@ namespace MyWatcherApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Continent");
+
+                    b.Navigation("Country");
+
                     b.Navigation("SecondHandItem");
 
                     b.Navigation("User");
@@ -366,6 +398,14 @@ namespace MyWatcherApi.Migrations
 
             modelBuilder.Entity("MyWatcher.Entities.UserStockItem", b =>
                 {
+                    b.HasOne("MyWatcher.Entities.Continent", "Continent")
+                        .WithMany()
+                        .HasForeignKey("ContinentId");
+
+                    b.HasOne("MyWatcher.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("MyWatcher.Entities.StockItem", "StockItem")
                         .WithMany()
                         .HasForeignKey("StockItemId")
@@ -377,6 +417,10 @@ namespace MyWatcherApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Continent");
+
+                    b.Navigation("Country");
 
                     b.Navigation("StockItem");
 
