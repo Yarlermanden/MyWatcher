@@ -63,8 +63,4 @@
     <ItemGroup>
       <EmbeddedResource Remove="MigrationsOld\**" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Resources" />
-    </ItemGroup>
 </Project>
