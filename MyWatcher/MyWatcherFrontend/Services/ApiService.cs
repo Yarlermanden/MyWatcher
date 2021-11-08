@@ -39,7 +39,7 @@ namespace MyWatcherFrontend.Services
         public async Task<List<UserItemTableDTO>> GetUserItems(User user)
         {
             var userId = user.Id;
-            var response = await _communicationService.SendGetRequest($"/api/useritem/getStock/{userId}", "");
+            var response = await _communicationService.SendGetRequest($"/api/userStockItem/getStock/{userId}", "");
             if (response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
@@ -51,7 +51,7 @@ namespace MyWatcherFrontend.Services
 
         public async Task<(bool, Guid?, string)> AddUserItem(UserItemAddDTO dto)
         {
-            var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
+            var response = await _communicationService.PostItemRequest($"/api/userStockItem/add", dto);
             if (response.IsSuccessStatusCode)
             {
                 var id = (await response.Content.ReadAsStringAsync()).Replace("\"","");
@@ -69,7 +69,7 @@ namespace MyWatcherFrontend.Services
 
         public async Task<(bool, string)> DeleteUserItem(UserItemDeleteDTO dto)
         {
-            var response = await _communicationService.DeleteItemRequest($"/api/useritem/delete", dto);
+            var response = await _communicationService.DeleteItemRequest($"/api/userStockItem/delete", dto);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully deleted item");
@@ -86,7 +86,7 @@ namespace MyWatcherFrontend.Services
 
         public async Task<(bool, string)> UpdateUserItem(UserItemUpdateDTO dto)
         {
-            var response = await _communicationService.PatchRequest($"/api/useritem/update", dto);
+            var response = await _communicationService.PatchRequest($"/api/userStockItem/update", dto);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully updated Item");
@@ -101,7 +101,7 @@ namespace MyWatcherFrontend.Services
 
         public async Task<bool> ForceRescanUserItems(ForceRescanRequest request)
         {
-            var response = await _communicationService.PatchRequest($"/api/useritem/forceRescan", request);
+            var response = await _communicationService.PatchRequest($"/api/userStockItem/forceRescan", request);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Successfully forced rescan");

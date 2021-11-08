@@ -15,37 +15,37 @@ namespace MyWatcherApi.Api
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private readonly IItemService _itemService;
+        private readonly IStockItemService _stockItemService;
         private readonly ClientHub _clientHub;
 
-        public ItemController(IItemService itemService, ClientHub clientHub)
+        public ItemController(IStockItemService stockItemService, ClientHub clientHub)
         {
-            _itemService = itemService;
+            _stockItemService = stockItemService;
             _clientHub = clientHub;
         }
 
         [HttpGet("getAll/{serviceId}")]
         public async Task<List<ItemGetDTO>> GetAllItems(Service service)
         {
-            return await _itemService.GetAllItemsOfService(service);
+            return await _stockItemService.GetAllItemsOfService(service);
         }
 
         [HttpGet("getAllFromUser")]
         public async Task<List<ItemGetDTO>> GetAllItemsFromUser(Service service, Guid userId)
         {
-            return await _itemService.GetAllItemsOfServiceFromUser(service, userId);
+            return await _stockItemService.GetAllItemsOfServiceFromUser(service, userId);
         }
 
         [HttpGet("getFromUserNotRecentlyUpdated/{serviceId}/{userId}")]
         public async Task<List<ItemGetDTO>> GetItemsFromUserNotRecentlyUpdated(Service service, Guid userId)
         {
-            return await _itemService.GetAllItemsOfServiceFromUserNotUpdatedLastHour(service, userId);
+            return await _stockItemService.GetAllItemsOfServiceFromUserNotUpdatedLastHour(service, userId);
         }
 
         [HttpPatch("updateItem")]
         public async Task<IActionResult> UpdateItem([FromBody] ItemUpdateDTO dto)
         {
-            await _itemService.UpdateItem(dto);
+            await _stockItemService.UpdateItem(dto);
             return NoContent();
         }
         

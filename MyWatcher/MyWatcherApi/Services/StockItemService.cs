@@ -11,7 +11,7 @@ using MyWatcher.Models.Item;
 
 namespace MyWatcher.Services
 {
-    public interface IItemService
+    public interface IStockItemService
     {
         public Task<Item?> GetItem(Guid id);
         public Task<Item?> GetItemFromUrlAndServiceId(string url, Service service);
@@ -22,11 +22,11 @@ namespace MyWatcher.Services
         public Task<List<ItemGetDTO>> GetAllItemsOfServiceFromUserNotUpdatedLastHour(Service service, Guid userId);
     }
     
-    public class ItemService : IItemService
+    public class StockItemService : IStockItemService
     {
         private readonly DatabaseContext _dbContext;
         
-        public ItemService(DatabaseContext dbContext)
+        public StockItemService(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }

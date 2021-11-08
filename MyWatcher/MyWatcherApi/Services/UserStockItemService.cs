@@ -11,7 +11,7 @@ using MyWatcher.Models.UserItem;
 
 namespace MyWatcher.Services
 {
-    public interface IUserItemService
+    public interface IUserStockItemService
     {
         public Task<Guid?> AddUserItem(UserItemAddDTO dto);
         public Task<Guid?> AddUserItem(Guid userId, Guid itemId, string name);
@@ -21,25 +21,25 @@ namespace MyWatcher.Services
         public Task<bool> UpdateUserItem(UserItemUpdateDTO dto);
     }
     
-    public class UserItemService : IUserItemService
+    public class UserStockItemService : IUserStockItemService
     {
         private readonly DatabaseContext _dbContext;
-        private readonly IItemService _itemService;
+        private readonly IStockItemService _stockItemService;
 
-        public UserItemService(DatabaseContext dbContext,
-            IItemService itemService)
+        public UserStockItemService(DatabaseContext dbContext,
+            IStockItemService stockItemService)
         {
             _dbContext = dbContext;
-            _itemService = itemService;
+            _stockItemService = stockItemService;
         }
 
         public async Task<Guid?> AddUserItem(UserItemAddDTO dto)
         {
-            var item = await _itemService.GetItemFromUrlAndServiceId(dto.URL, dto.Service);
+            var item = await _stockItemService.GetItemFromUrlAndServiceId(dto.URL, dto.Service);
             if (item == null)
             {
-                var id = await _itemService.AddItem(dto.URL, dto.Service);
-                item = await _itemService.GetItem(id);
+                var id = await _stockItemService.AddItem(dto.URL, dto.Service);
+                item = await _stockItemService.GetItem(id);
             }
 
             //check if this userItem already exists

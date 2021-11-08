@@ -15,20 +15,20 @@ namespace MyWatcherApi.Api
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
-    public class UserItemController : ControllerBase
+    public class UserStockItemController : ControllerBase
     {
-        private readonly IUserItemService _userItemService;
-        private readonly IItemService _itemService;
+        private readonly IUserStockItemService _userStockItemService;
+        private readonly IStockItemService _stockItemService;
         private readonly ClientHub _clientHub;
         private readonly ServerHub _serverHub;
         
-        public UserItemController(IUserItemService userItemService,
-            IItemService itemService,
+        public UserStockItemController(IUserStockItemService userStockItemService,
+            IStockItemService stockItemService,
             ClientHub clientHub,
             ServerHub serverHub) 
         {
-            _userItemService = userItemService;
-            _itemService = itemService;
+            _userStockItemService = userStockItemService;
+            _stockItemService = stockItemService;
             _clientHub = clientHub;
             _serverHub = serverHub;
         }
@@ -43,13 +43,13 @@ namespace MyWatcherApi.Api
         [HttpGet("getStock/{userId}")]
         public async Task<List<UserItemTableDTO>> GetUserItems(Guid userId)
         {
-            return await _userItemService.GetUsersItemsFromService(userId, Service.Stock);
+            return await _userStockItemService.GetUsersItemsFromService(userId, Service.Stock);
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> PostUserItem([FromBody] UserItemAddDTO dto)
         {
-            var id = await _userItemService.AddUserItem(dto);
+            var id = await _userStockItemService.AddUserItem(dto);
             if (id == null)
             {
                 return new ConflictResult();
@@ -61,7 +61,7 @@ namespace MyWatcherApi.Api
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteUserItem([FromBody] UserItemDeleteDTO dto)
         {
-            var success = await _userItemService.DeleteUserItem(dto);
+            var success = await _userStockItemService.DeleteUserItem(dto);
             if (!success) return new ConflictResult();
             return NoContent();
         }
@@ -69,7 +69,7 @@ namespace MyWatcherApi.Api
         [HttpPatch("update")]
         public async Task<IActionResult> UpdateUserItem([FromBody] UserItemUpdateDTO dto)
         {
-            var success = await _userItemService.UpdateUserItem(dto);
+            var success = await _userStockItemService.UpdateUserItem(dto);
             if (!success) return new ConflictResult();
             return NoContent();
         }
@@ -77,10 +77,8 @@ namespace MyWatcherApi.Api
         [HttpPatch("forceRescan")]
         public async Task<IActionResult> ForceRescan([FromBody] ForceRescanRequest request)
         {
-            //var success  = await _scraperSocketService.StartScrapingOfUserItems(request);
-            //var success = isServerOnline
+            //todo implement so we know when database is online and return according to this
             await _serverHub.StartUserScraping(request);
-            //if (!success) { return new ConflictResult(); }
             return NoContent();
         }
     }

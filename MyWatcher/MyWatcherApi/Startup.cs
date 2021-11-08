@@ -41,19 +41,6 @@ namespace MyWatcherApi
             AuthenticationConfiguration authenticationConfiguration = new AuthenticationConfiguration();
             Configuration.Bind("Authentication", authenticationConfiguration);
             services.AddSingleton(authenticationConfiguration);
-           
-            /*
-            services.AddDbContextFactory<DatabaseContext>(options =>
-            {
-                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MyWatcherApi"));
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                //Run migrations with dotnet ef --startup-project ../MyWatcherApi migrations add Initial
-            });
-            /*
-            services.AddScoped(p =>
-                p.GetRequiredService<IDbContextFactory<DatabaseContext>>()
-                    .CreateDbContext());
-                    */
 
             services.AddCors(policy =>
             {
@@ -104,8 +91,8 @@ namespace MyWatcherApi
 
             services.AddSingleton<ServerHub>();
             services.AddSingleton<ClientHub>();
-            services.AddTransient<IItemService, ItemService>();
-            services.AddTransient<IUserItemService, UserItemService>();
+            services.AddTransient<IStockItemService, StockItemService>();
+            services.AddTransient<IUserStockItemService, UserStockItemService>();
             services.AddTransient<IUserService, UserService>();
         }
 
