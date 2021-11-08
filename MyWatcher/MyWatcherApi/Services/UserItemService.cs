@@ -23,13 +23,13 @@ namespace MyWatcher.Services
     
     public class UserItemService : IUserItemService
     {
-        private readonly IDbContextFactory<DatabaseContext> _dbFactory;
+        private readonly DatabaseContext _dbContext;
         private readonly IItemService _itemService;
 
-        public UserItemService(IDbContextFactory<DatabaseContext> dbFactory,
+        public UserItemService(DatabaseContext dbContext,
             IItemService itemService)
         {
-            _dbFactory = dbFactory;
+            _dbContext = dbContext;
             _itemService = itemService;
         }
 
@@ -51,26 +51,23 @@ namespace MyWatcher.Services
 
         public async Task<Guid?> AddUserItem(Guid userId, Guid itemId, string name)
         {
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
 
             var userItem = new UserStockItem(userId, itemId, name);
-            await dbContext.UserStockItems.AddAsync(userItem);
-            await dbContext.SaveChangesAsync();
+            await _dbContext.UserStockItems.AddAsync(userItem);
+            await _dbContext.SaveChangesAsync();
             return userItem.Id;
         }
 
         public async Task<UserStockItem?> GetUserItem(Guid userId, Guid itemId)
         {
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var userItem = await dbContext.UserStockItems.Where(ui => ui.UserId == userId && ui.StockItemId == itemId)
+            var userItem = await _dbContext.UserStockItems.Where(ui => ui.UserId == userId && ui.StockItemId == itemId)
                 .FirstOrDefaultAsync();
             return userItem;
         }
 
         public async Task<List<UserItemTableDTO>> GetUsersItemsFromService(Guid userId, Service service)
         {
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            return await dbContext.UserStockItems.Include(ui => ui.StockItem)
+            return await _dbContext.UserStockItems.Include(ui => ui.StockItem)
                 .Where(ui => ui.UserId == userId && ui.StockItem.Service == service)
                 .Select(ui => new UserItemTableDTO()
                 {
@@ -88,12 +85,11 @@ namespace MyWatcher.Services
 
         public async Task<bool> DeleteUserItem(UserItemDeleteDTO dto)
         {
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var userItem = await dbContext.UserStockItems.FindAsync(dto.Id);
+            var userItem = await _dbContext.UserStockItems.FindAsync(dto.Id);
             if (userItem != null && userItem.UserId == dto.UserId)
             {
-                dbContext.UserStockItems.Remove(userItem);
-                await dbContext.SaveChangesAsync();
+                _dbContext.UserStockItems.Remove(userItem);
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -101,11 +97,10 @@ namespace MyWatcher.Services
 
         public async Task<bool> UpdateUserItem(UserItemUpdateDTO dto)
         {
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var userItem = await dbContext.UserStockItems.FindAsync(dto.Id);
+            var userItem = await _dbContext.UserStockItems.FindAsync(dto.Id);
             if (userItem == null || userItem.UserId != dto.UserId) return false;
             userItem.Active = dto.Active;
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return true;
         }
     }

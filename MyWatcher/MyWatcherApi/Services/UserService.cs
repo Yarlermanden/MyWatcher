@@ -18,18 +18,17 @@ namespace MyWatcher.Services
 
     public class UserService : IUserService
     {
-        private readonly IDbContextFactory<DatabaseContext> _dbFactory;
+        private readonly DatabaseContext _dbContext;
 
-        public UserService(IDbContextFactory<DatabaseContext> dbFactory)
+        public UserService(DatabaseContext dbContext)
         {
-            _dbFactory = dbFactory;
+            _dbContext = dbContext;
         }
         
         public async Task<UserGetDTO?> RegisterUser(UserRegisterDTO dto)
         {
             dto.Email = dto.Email.ToLower();
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
+            var user = await _dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
             if (user != null) return null;
 
             var salt = await GenerateSalt(32);
@@ -42,8 +41,8 @@ namespace MyWatcher.Services
                 Password = password,
                 LastLogin = DateTimeOffset.UtcNow
             };
-            dbContext.Users.Add(user);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
             
             return await GetUserGetDtoFromUser(user);
         }
@@ -51,15 +50,14 @@ namespace MyWatcher.Services
         public async Task<UserGetDTO?> LoginUser(UserLoginDTO dto)
         {
             dto.Email = dto.Email.ToLower();
-            await using var dbContext = await _dbFactory.CreateDbContextAsync();
-            var user = await dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
+            var user = await _dbContext.Users.Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
             if (user == null) return null;
 
             var hashedPassword = await GenerateHashedPassword(user.Salt, dto.Password);
             if (hashedPassword != user.Password) return null;
             
             user.LastLogin = DateTimeOffset.UtcNow;
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return await GetUserGetDtoFromUser(user);
         }
 

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyWatcher.Entities;
+using MyWatcher.Models.User;
 using MyWatcherApi.Hubs;
 using MyWatcher.Services;
 using MyWatcherApi.Api;
@@ -41,15 +42,18 @@ namespace MyWatcherApi
             Configuration.Bind("Authentication", authenticationConfiguration);
             services.AddSingleton(authenticationConfiguration);
            
+            /*
             services.AddDbContextFactory<DatabaseContext>(options =>
             {
                 //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MyWatcherApi"));
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
                 //Run migrations with dotnet ef --startup-project ../MyWatcherApi migrations add Initial
             });
+            /*
             services.AddScoped(p =>
                 p.GetRequiredService<IDbContextFactory<DatabaseContext>>()
                     .CreateDbContext());
+                    */
 
             services.AddCors(policy =>
             {
@@ -105,7 +109,7 @@ namespace MyWatcherApi
             services.AddTransient<IUserService, UserService>();
         }
 
-        public void Configure(IApplicationBuilder app, IDbContextFactory<DatabaseContext> dbContextFactory)
+        public void Configure(IApplicationBuilder app, DatabaseContext dbContext, IUserService userService)
         {
             //app.UseHttpsRedirection();
             //app.UseBlazorFrameworkFiles();
@@ -128,27 +132,24 @@ namespace MyWatcherApi
                 );
                 */
             });
-            ApplicationDbInitializer.SeedUsers(dbContextFactory);
+            ApplicationDbInitializer.SeedUsers(dbContext, userService);
         }
 
         public static class ApplicationDbInitializer
         {
-            public static void SeedUsers(IDbContextFactory<DatabaseContext> factory)
+            public static void SeedUsers(DatabaseContext dbContext, IUserService userService)
             {
-                using var dbContext = factory.CreateDbContext();
                 var users = dbContext.Users.Select(u => u).ToList();
                 if (users == null || users.Count == 0)
                 {
-                    var user = new User()
+                    var user = new UserRegisterDTO()
                     {
                         UserName = "Yarl",
                         Password = "Hej123!",
                         Email = "Test@gmail.com",
-                        Salt = "asd"
                     };
 
-                    dbContext.Users.Add(user);
-                    dbContext.SaveChanges();
+                    userService.RegisterUser(user);
                 }
             }
         }
