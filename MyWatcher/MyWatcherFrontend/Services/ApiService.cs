@@ -54,9 +54,8 @@ namespace MyWatcherFrontend.Services
             var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
             if (response.IsSuccessStatusCode)
             {
-                var id = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Successfully posted Item with id: {id}"); 
-                
+                var id = (await response.Content.ReadAsStringAsync()).Replace("\"","");
+                Console.WriteLine($"Successfully posted Item with id: {id}");
                 return (response.IsSuccessStatusCode, Guid.Parse(id), "");
             }
             else

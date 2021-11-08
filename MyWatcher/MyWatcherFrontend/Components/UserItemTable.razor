@@ -13,7 +13,6 @@
             <MudTextField @bind-Value="_searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh Style="width: 5%; height:10px"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Id)"><strong>Id</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 35%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Name)"><strong>Name</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 15%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.Price)"><strong>Price</strong></MudTableSortLabel></MudTh>
             <MudTh Style="width: 25%"><MudTableSortLabel SortBy="new Func<UserItemTableDTO, object>(x=>x.LastScan)"><strong>Last Scanned</strong></MudTableSortLabel></MudTh>
@@ -24,7 +23,6 @@
             <Empty Simple/>
         </NoRecordsContent>
         <RowTemplate>
-            <MudTd DataLabel="Id" Style="height:10px">@context.Id</MudTd>
             <MudTd DataLabel="Name" Style="height:10px">@context.Name</MudTd>
             <MudTd DataLabel="Price" Style="height:10px">@ShowPriceText(@context.Price)</MudTd>
             <MudTd DataLabel="LastScan" Style="height:10px">@DateToTime(@context.LastScan)</MudTd>

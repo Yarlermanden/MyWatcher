@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using MyWatcher.Models;
+using MyWatcher.Models.Enums;
 using Serilog;
 
 namespace MyWatcherApi.Hubs
@@ -26,11 +27,11 @@ namespace MyWatcherApi.Hubs
         }
 
         //=============================== REQUESTS TO CLIENT =======================================================
-        //Invoked from API calls made by the server
         public async Task ScrapingFinished(ScrapingCompleteDTO dto)
         {
-            if (dto.UserId == null) await Clients.All.SendAsync("ScrapingFinished");
-            else await Clients.Group(dto.UserId.ToString()).SendAsync("ScrapingFinished");
+            var endpoint = dto.Service == Service.Stock ? "StockScrapingFinished" : "SecondHandScrapingFinished";
+            if (dto.UserId == null) await Clients.All.SendAsync(endpoint);
+            else await Clients.Group(dto.UserId.ToString()).SendAsync(endpoint);
         }
     }
 }

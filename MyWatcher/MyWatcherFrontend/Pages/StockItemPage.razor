@@ -61,7 +61,7 @@
             //.AddMessagePackProtocol()
             .Build();
 
-        _hubConnection.On("ScrapingFinished", async () =>
+        _hubConnection.On("StockScrapingFinished", async () =>
         {
             _snackbar.Add("Scraping finished", Severity.Success);
             await RefreshUserItems();
