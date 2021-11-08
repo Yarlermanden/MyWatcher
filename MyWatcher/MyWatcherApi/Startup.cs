@@ -142,7 +142,9 @@ namespace MyWatcherApi
                     var user = new User()
                     {
                         UserName = "Yarl",
-                        Password = "Hej123!"
+                        Password = "Hej123!",
+                        Email = "Test@gmail.com",
+                        Salt = "asd"
                     };
 
                     dbContext.Users.Add(user);

@@ -53,5 +53,14 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Remove="MigrationsOld\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="MigrationsOld\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Remove="MigrationsOld\**" />
     </ItemGroup>
 </Project>

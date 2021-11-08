@@ -16,7 +16,7 @@ namespace MyWatcherFrontend.Services
     public interface IApiService
     {
         public Task<List<UserItemTableDTO>> GetUserItems(User user);
-        public Task<(bool, int, string)> AddUserItem(UserItemAddDTO dto);
+        public Task<(bool, Guid?, string)> AddUserItem(UserItemAddDTO dto);
         public Task<(bool, string)> DeleteUserItem(UserItemDeleteDTO dto);
         public Task<(bool, string)> UpdateUserItem(UserItemUpdateDTO dto);
         public Task<bool> ForceRescanUserItems(ForceRescanRequest request);
@@ -49,7 +49,7 @@ namespace MyWatcherFrontend.Services
             return null;
         }
 
-        public async Task<(bool, int, string)> AddUserItem(UserItemAddDTO dto)
+        public async Task<(bool, Guid?, string)> AddUserItem(UserItemAddDTO dto)
         {
             var response = await _communicationService.PostItemRequest($"/api/useritem/add", dto);
             if (response.IsSuccessStatusCode)
@@ -57,14 +57,14 @@ namespace MyWatcherFrontend.Services
                 var id = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Successfully posted Item with id: {id}"); 
                 
-                return (response.IsSuccessStatusCode, int.Parse(id), "");
+                return (response.IsSuccessStatusCode, Guid.Parse(id), "");
             }
             else
             {
                 var errorMessage = "";
                 if (response.StatusCode == HttpStatusCode.Conflict) errorMessage = "Item already exists";
                 else if (response.StatusCode == HttpStatusCode.ServiceUnavailable) errorMessage = "Couldn't reach API";
-                return (response.IsSuccessStatusCode, -1, errorMessage);
+                return (response.IsSuccessStatusCode, null, errorMessage);
             }
         }
 

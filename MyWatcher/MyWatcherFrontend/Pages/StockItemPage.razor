@@ -31,7 +31,7 @@
     private UserItemTable _userItemTable;
     private AddUserItemComponent _addUserItemComponent;
     private List<UserItemTableDTO> _items;
-    private User _user = new User() {Id = 1};
+    private User _user = new User() {Id = new Guid("75326c50-367f-4e63-ad6f-464ed27e4177")};
     private bool _alertHidden = true;
     private string _alertMessage;
     private HubConnection? _hubConnection;
@@ -97,7 +97,7 @@
                 {
                     Name = dto.Name,
                     Active = true,
-                    Id = id
+                    Id = (Guid)id
                 };
                 //_items.Add(userItemTableDTO);
                 _items.Insert(0, userItemTableDTO);
