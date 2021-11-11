@@ -12,17 +12,17 @@ namespace MyWatcher.Services;
 
 public interface IParsingCsvService
 {
-    Task ParsingContinentsFromCsv(DatabaseContext dbContext);
-    Task ParsingCountriesFromCsv(DatabaseContext dbContext);
-    Task ParsingWebsitesFromCsv(DatabaseContext dbContext);
+    void ParsingContinentsFromCsv(DatabaseContext dbContext);
+    void ParsingCountriesFromCsv(DatabaseContext dbContext);
+    void ParsingWebsitesFromCsv(DatabaseContext dbContext);
 }
 
 public class ParsingCsvService : IParsingCsvService
 {
-    public async Task ParsingContinentsFromCsv(DatabaseContext dbContext)
+    public void ParsingContinentsFromCsv(DatabaseContext dbContext)
     {
         var continents = new List<Continent>();
-        var lines = await ReadCsvFile("Resources/continents.csv");
+        var lines = ReadCsvFile("Resources/continents.csv");
         foreach (var line in lines)
         {
             try
@@ -39,18 +39,19 @@ public class ParsingCsvService : IParsingCsvService
                 Console.WriteLine("Failed at parsing line in continent csv: {0}", e.Message);
             }
         }
-        await dbContext.Continents.AddRangeAsync(continents);
-        await dbContext.SaveChangesAsync();
+        dbContext.Continents.AddRange(continents);
+        dbContext.SaveChanges();
         Console.WriteLine("continents ended");
     }
 
-    public async Task ParsingCountriesFromCsv(DatabaseContext dbContext)
+    public void ParsingCountriesFromCsv(DatabaseContext dbContext)
     {
         Console.WriteLine("countries started");
         var continents = new Dictionary<string, Continent>();
         try
         {
-            await dbContext.Continents.ForEachAsync(x => continents.TryAdd(x.Name, x));
+            //dbContext.Continents.ForEachAsync(x => continents.TryAdd(x.Name, x));
+            dbContext.Continents.ToList().ForEach(x => continents.TryAdd(x.Name, x));
         }
         catch (Exception e)
         {
@@ -58,7 +59,7 @@ public class ParsingCsvService : IParsingCsvService
         }
 
         var countries = new List<Country>();
-        var lines = await ReadCsvFile("Resources/countries.csv");
+        var lines = ReadCsvFile("Resources/countries.csv");
         foreach (var line in lines)
         {
             try
@@ -79,18 +80,18 @@ public class ParsingCsvService : IParsingCsvService
                 Console.WriteLine("Failed at parsing line in country csv: {0}", e.Message);
             }
         }
-        await dbContext.Countries.AddRangeAsync(countries);
-        await dbContext.SaveChangesAsync();
+        dbContext.Countries.AddRange(countries);
+        dbContext.SaveChanges();
     }
 
-    public async Task ParsingWebsitesFromCsv(DatabaseContext dbContext)
+    public void ParsingWebsitesFromCsv(DatabaseContext dbContext)
     {
         
     }
 
     
     //private IEnumerable<string[]> ReadCsvFile(string filePath)
-    private async Task<List<string[]>> ReadCsvFile(string filePath)
+    private List<string[]> ReadCsvFile(string filePath)
     {
         var list = new List<string[]>();
         using (var reader = new StreamReader(filePath))
@@ -99,7 +100,7 @@ public class ParsingCsvService : IParsingCsvService
             while (!reader.EndOfStream)
             {
                 //yield return reader.ReadLine().Split(";");
-                list.Add((await reader.ReadLineAsync()).Split(";").Select(x => x.Trim()).ToArray());
+                list.Add((reader.ReadLine()).Split(";").Select(x => x.Trim()).ToArray());
             }
         }
         return list;

@@ -127,7 +127,8 @@ namespace MyWatcherApi
             });
             try
             {
-                Task.Run(() => ApplicationDbInitializer.ParseAllSetupFilesAndSeed(dbContext, parsingCsvService, userService)).RunSynchronously();
+                //Task.Run(() => ApplicationDbInitializer.ParseAllSetupFilesAndSeed(dbContext, parsingCsvService, userService)).RunSynchronously();
+                ApplicationDbInitializer.ParseAllSetupFilesAndSeed(dbContext, parsingCsvService, userService);
             }
             catch (Exception e)
             {
@@ -137,7 +138,7 @@ namespace MyWatcherApi
 
         public static class ApplicationDbInitializer
         {
-            public static async Task SeedUsers(DatabaseContext dbContext, IUserService userService)
+            public static void SeedUsers(DatabaseContext dbContext, IUserService userService)
             {
                 Console.WriteLine("seed started");
                 var users = dbContext.Users.Select(u => u).ToList();
@@ -150,18 +151,18 @@ namespace MyWatcherApi
                         Email = "Test@gmail.com",
                     };
 
-                    userService.RegisterUser(user);
+                    //userService.RegisterUser(user);
                 }
             }
 
-            public static async Task ParseAllSetupFilesAndSeed(DatabaseContext dbContext, IParsingCsvService parsingCsvService, IUserService userService)
+            public static void ParseAllSetupFilesAndSeed(DatabaseContext dbContext, IParsingCsvService parsingCsvService, IUserService userService)
             {
                 //If users == null
                 
-                await parsingCsvService.ParsingContinentsFromCsv(dbContext);
-                await parsingCsvService.ParsingCountriesFromCsv(dbContext);
-                await parsingCsvService.ParsingWebsitesFromCsv(dbContext);
-                await SeedUsers(dbContext, userService);
+                parsingCsvService.ParsingContinentsFromCsv(dbContext);
+                parsingCsvService.ParsingCountriesFromCsv(dbContext);
+                parsingCsvService.ParsingWebsitesFromCsv(dbContext);
+                SeedUsers(dbContext, userService);
             }
         }
     }
