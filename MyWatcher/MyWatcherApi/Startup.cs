@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Fabric.Query;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -96,9 +98,11 @@ namespace MyWatcherApi
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IWebsiteService, WebsiteService>();
             services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<IParsingCsvService, ParsingCsvService>();
         }
 
-        public void Configure(IApplicationBuilder app, DatabaseContext dbContext, IUserService userService)
+        public void Configure(IApplicationBuilder app, DatabaseContext dbContext, IUserService userService, 
+            IParsingCsvService parsingCsvService)
         {
             //app.UseHttpsRedirection();
             //app.UseBlazorFrameworkFiles();
@@ -121,13 +125,21 @@ namespace MyWatcherApi
                 );
                 */
             });
-            ApplicationDbInitializer.SeedUsers(dbContext, userService);
+            try
+            {
+                Task.Run(() => ApplicationDbInitializer.ParseAllSetupFilesAndSeed(dbContext, parsingCsvService, userService)).RunSynchronously();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("failed with: " + e.Message);
+            }
         }
 
         public static class ApplicationDbInitializer
         {
-            public static void SeedUsers(DatabaseContext dbContext, IUserService userService)
+            public static async Task SeedUsers(DatabaseContext dbContext, IUserService userService)
             {
+                Console.WriteLine("seed started");
                 var users = dbContext.Users.Select(u => u).ToList();
                 if (users == null || users.Count == 0)
                 {
@@ -140,6 +152,16 @@ namespace MyWatcherApi
 
                     userService.RegisterUser(user);
                 }
+            }
+
+            public static async Task ParseAllSetupFilesAndSeed(DatabaseContext dbContext, IParsingCsvService parsingCsvService, IUserService userService)
+            {
+                //If users == null
+                
+                await parsingCsvService.ParsingContinentsFromCsv(dbContext);
+                await parsingCsvService.ParsingCountriesFromCsv(dbContext);
+                await parsingCsvService.ParsingWebsitesFromCsv(dbContext);
+                await SeedUsers(dbContext, userService);
             }
         }
     }
