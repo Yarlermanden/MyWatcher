@@ -1,0 +1,126 @@
+@page "/AnimationPage"
+@inherits LayoutComponentBase
+@using System.Timers
+
+<style>
+    body{
+        margin: 0;
+        height: 100vh;
+        background-image: linear-gradient(90deg, white, white);
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        perspective: 1000px;
+    }
+    main{
+        border-radius: 10px;
+        height: 90vh;
+        width: 80vw;
+        background-color: rgba(255, 0, 255, 0.4);
+        background-image: url("icon-192.png");
+        border: 1px solid white;
+        cursor: pointer;
+        transform: rotateX(0deg) rotateY(0deg);
+        transition: 0.4s;
+    }
+</style>
+
+<main style="@css"
+      @onmousedown='p => MouseDown(p)'
+      @onmouseup='p => MouseUp(p)'
+      @onmousemove='p => MouseMove(p)'
+    />
+      @*@onpointermove='p => Change(p, "move")'*@
+      @*@onpointerover='p=> { Change(p, "in"); animate = false; timer.Stop(); timer.Start(); }'*@
+      @*@onpointerout='p => Change(p, "out")'*@
+      @*@onclick='p => Click(p)'*@
+      @*@onpointermove='p => MouseMove(p)'*@
+
+    @code{
+        string css;
+        bool animate;
+        Timer timer;
+        int height = 1080;
+        int width = 2120;
+        bool mousePressed = false;
+        double pressedX = 0;
+        double pressedY = 0;
+        double currentX = 0;
+        double currentY = 0;
+        double currentDegreeX = 0;
+        double currentDegreeY = 0;
+        
+        public void Change(PointerEventArgs args, string method)
+        {
+            css = (method, animate) switch
+            {
+                ("out", _) => TransformToCss(0, 0) + "transition: 1s;",
+                ("in", _) => TransformToCss(GetDegree(args.OffsetX, "x"), GetDegree(args.OffsetY, "y")),
+                ("move", true) => "transition: 0s;" + TransformToCss(GetDegree(args.OffsetX, "x"), GetDegree(args.OffsetY, "y")),
+                ("move", false) => TransformToCss(GetDegree(args.OffsetX, "x"), GetDegree(args.OffsetY, "y")),
+                _ => TransformToCss(0, 0),
+            };
+        }
+
+        public void MouseDown(MouseEventArgs args)
+        {
+            mousePressed = true;
+            pressedX = args.OffsetX;
+            pressedY = args.OffsetY;
+            Console.WriteLine("Mouse pressed");
+        }
+
+        public void MouseUp(MouseEventArgs args)
+        {
+            mousePressed = false;
+            //currentDegreeX = (pressedX - args.OffsetX) / width * 360;
+            //currentDegreeY = (pressedY - args.OffsetY) / height * 360;
+            Console.WriteLine("mouse released");
+        }
+
+        public void MouseMove(MouseEventArgs args)
+        {
+            var deltaX = currentX - args.OffsetX;
+            var deltaY = currentY - args.OffsetY;
+            
+            if (mousePressed)
+            {
+                //TransformToCss(deltaX / width * 360, deltaY / height * 360);
+                //var degreeX = GetDegree(deltaX, "x");
+                //var degreeY = GetDegree(deltaY, "y");
+                var degreeX = deltaX/width*180;
+                currentDegreeX += degreeX;
+                var degreeY = deltaY / height * 180;
+                currentDegreeY += degreeY;
+                Console.WriteLine(currentDegreeX);
+                //css = TransformToCss(GetDegree(deltaX, "x"), GetDegree(deltaY, "y"));
+                css = TransformToCss(currentDegreeX, currentDegreeY);
+            }
+            currentX = args.OffsetX;
+            currentY = args.OffsetY;
+        }
+        
+        public void Click(MouseEventArgs args)
+        {
+            //css = TransformToCss(args.ClientX, args.ClientY) + "transition: 5s;";
+            var xDegrees = args.OffsetX / width * 360;
+            var yDegrees = args.OffsetY / height * 360;
+            Console.WriteLine(args.Button);
+            css = TransformToCss(yDegrees, xDegrees) + "transition: 5s;";
+        }
+        
+        protected override void OnInitialized()
+        {
+            timer = new Timer(350);
+            animate = true;
+            timer.AutoReset = false;
+            timer.Elapsed += (o, args) => animate = true;
+        }
+        public string TransformToCss(double x, double y) => $"transform: rotateY({x}deg) rotateX({y}deg);";
+        public double GetDegree(double number, string dimension)
+            => dimension switch
+            {
+                "y" => Math.Clamp((number - 250) / 250 * 10, -10, 10),
+                "x" => - Math.Clamp((number - 500) / 500 * 10, -10, 10),
+            };
+    }
